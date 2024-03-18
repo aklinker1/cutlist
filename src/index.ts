@@ -1,13 +1,13 @@
-import { onshape } from "./onshape";
-import type { PartToCut, Project, Stock, StockMatrix } from "./types";
-import consola from "consola";
-import { p } from "@antfu/utils";
-import { convertInToPx, convertMtoIn } from "./units";
-import { BoardLayout, Rectangle } from "./geometry";
-import type { Config } from "./config";
+import { onshape } from './onshape';
+import type { PartToCut, Project, Stock, StockMatrix } from './types';
+import consola from 'consola';
+import { p } from '@antfu/utils';
+import { convertInToPx, convertMtoIn } from './units';
+import { BoardLayout, Rectangle } from './geometry';
+import type { Config } from './config';
 
-export type * from "./types";
-export * from "./config";
+export type * from './types';
+export * from './config';
 
 export function createCutlistGenerator(
   config: Config,
@@ -19,16 +19,16 @@ export function createCutlistGenerator(
     getPartsToCut: async (project: Project): Promise<PartToCut[]> => {
       const did = project.source.id;
 
-      consola.info("Getting document info...");
+      consola.info('Getting document info...');
       const document = await onshape.getDocument(did);
-      await debugObject?.("document", document);
+      await debugObject?.('document', document);
       const wvmid = document.defaultWorkspace.id;
 
       let eid = project.source.assemblyId;
       if (!eid) {
-        consola.info("Assembly ID not provided, finding first assembly...");
+        consola.info('Assembly ID not provided, finding first assembly...');
         const assemblies = await onshape.getAssemblies(did, wvmid);
-        await debugObject?.("assemblies", assemblies);
+        await debugObject?.('assemblies', assemblies);
         consola.log(`Assemblies found: ${assemblies.length}`);
         if (assemblies.length === 0) {
           throw Error(`No assemblies found for ${document.name}`);
@@ -38,30 +38,30 @@ export function createCutlistGenerator(
       }
 
       const bom = await onshape.getAssemblyBom(did, wvmid, eid);
-      await debugObject?.("bom", bom);
+      await debugObject?.('bom', bom);
 
       const quantityHeaderId = bom.headers.find(
-        (header) => header.propertyName === "quantity",
+        (header) => header.propertyName === 'quantity',
       )?.id;
       if (quantityHeaderId == null) {
-        consola.log("Headers:", bom.headers);
-        throw Error("Could not find quantity column in BOM");
+        consola.log('Headers:', bom.headers);
+        throw Error('Could not find quantity column in BOM');
       }
 
       const nameHeaderId = bom.headers.find(
-        (header) => header.propertyName === "name",
+        (header) => header.propertyName === 'name',
       )?.id;
       if (nameHeaderId == null) {
-        consola.log("Headers:", bom.headers);
-        throw Error("Could not find name column in BOM");
+        consola.log('Headers:', bom.headers);
+        throw Error('Could not find name column in BOM');
       }
 
       const materialHeaderId = bom.headers.find(
-        (header) => header.propertyName === "material",
+        (header) => header.propertyName === 'material',
       )?.id;
       if (materialHeaderId == null) {
-        consola.log("Headers:", bom.headers);
-        throw Error("Could not find material column in BOM");
+        consola.log('Headers:', bom.headers);
+        throw Error('Could not find material column in BOM');
       }
 
       consola.info(`Loading part details: ${bom.rows.length}`);
@@ -96,8 +96,8 @@ export function createCutlistGenerator(
           })),
         ).promise;
       const parts = partGroups.flat();
-      await debugObject?.("parts", parts);
-      consola.info("Total parts:", parts.length);
+      await debugObject?.('parts', parts);
+      consola.info('Total parts:', parts.length);
       return parts.flat();
     },
 
@@ -105,15 +105,15 @@ export function createCutlistGenerator(
       parts: PartToCut[],
       availableStock: StockMatrix[],
     ): Promise<{ layouts: BoardLayout[]; leftovers: PartToCut[] }> => {
-      consola.info("Generating board layouts...");
+      consola.info('Generating board layouts...');
 
       // Create geometry for stock and parts
       const stockRectangles = reduceStockMatrix(availableStock)
         .map((stock) => new Rectangle(stock, 0, 0, stock.width, stock.length))
         .toSorted((a, b) => b.area - a.area);
-      await debugObject?.("stock-rectangles", stockRectangles);
+      await debugObject?.('stock-rectangles', stockRectangles);
       if (stockRectangles.length === 0) {
-        throw Error("You must include at least 1 stock.");
+        throw Error('You must include at least 1 stock.');
       }
 
       // Generate the layouts
@@ -133,7 +133,7 @@ export function createCutlistGenerator(
           (stock) => stock.data.material === part.material,
         );
         if (matchingStock == null) {
-          consola.warn("Not stock found for " + part.material);
+          consola.warn('Not stock found for ' + part.material);
           leftovers.push(part);
           continue;
         }
@@ -141,8 +141,8 @@ export function createCutlistGenerator(
         layouts.push(new BoardLayout(matchingStock, config));
         partQueue.unshift(part);
       }
-      debugObject?.("layouts", layouts);
-      debugObject?.("leftovers", leftovers);
+      debugObject?.('layouts', layouts);
+      debugObject?.('leftovers', leftovers);
 
       return { layouts, leftovers };
     },
@@ -159,7 +159,7 @@ export function reduceStockMatrix(matrix: StockMatrix[]): Stock[] {
 }
 
 export function generateSvg(layouts: BoardLayout[]) {
-  consola.info("Generating svg...");
+  consola.info('Generating svg...');
   const gap = 4; // in, not pixels
   let marginLeft = 0;
   let bounds = new Rectangle();
@@ -173,10 +173,10 @@ export function generateSvg(layouts: BoardLayout[]) {
       acc.stocks.push(
         stock.toSvg({
           id: `stock${layoutIndex}`,
-          stroke: "black",
-          "stroke-width": 4,
-          fill: "black",
-          "fill-opacity": 0.5,
+          stroke: 'black',
+          'stroke-width': 4,
+          fill: 'black',
+          'fill-opacity': 0.5,
         }),
       );
       layout.placements.forEach((part) => {
@@ -185,9 +185,9 @@ export function generateSvg(layouts: BoardLayout[]) {
         acc.parts.push(
           place.toSvg({
             id: `part${part.data.partNumber}.${part.data.instanceNumber}`,
-            stroke: "red",
-            "stroke-width": 4,
-            fill: "none",
+            stroke: 'red',
+            'stroke-width': 4,
+            fill: 'none',
           }),
         );
       });
@@ -200,8 +200,8 @@ export function generateSvg(layouts: BoardLayout[]) {
   const svgPadding = convertInToPx(2);
   return `
     <svg viewBox="${convertInToPx(bounds.x) - svgPadding} ${convertInToPx(bounds.y) - svgPadding} ${convertInToPx(bounds.width) + svgPadding * 2} ${convertInToPx(bounds.height) + svgPadding * 2}" height="100%" xmlns="http://www.w3.org/2000/svg">
-      ${stocks.join("\n")}
-      ${parts.join("\n")}
+      ${stocks.join('\n')}
+      ${parts.join('\n')}
     </svg>
   `.trim();
 }

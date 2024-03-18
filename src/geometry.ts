@@ -1,6 +1,6 @@
-import type { Config } from "./config";
-import type { PartToCut, Stock } from "./types";
-import { convertInToPx } from "./units";
+import type { Config } from './config';
+import type { PartToCut, Stock } from './types';
+import { convertInToPx } from './units';
 
 export class Rectangle<TData> {
   x: number;
@@ -111,7 +111,7 @@ export class Rectangle<TData> {
       attrs,
     )
       .map(([key, value]) => `${key}="${value}"`)
-      .join(" ")} />`;
+      .join(' ')} />`;
   }
 
   toString() {
@@ -135,9 +135,9 @@ export class BoardLayout {
     if (part.material !== this.stock.data.material) return false;
 
     switch (this.config.optimize) {
-      case "space":
+      case 'space':
         return this.tryAddPartTight(part);
-      case "cuts":
+      case 'cuts':
         return this.tryAddPartVertical(part);
       default:
         return false;

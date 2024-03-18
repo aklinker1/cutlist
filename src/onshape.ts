@@ -1,9 +1,9 @@
-import { createFetch } from "ofetch";
-import * as base64 from "base64-js";
+import { createFetch } from 'ofetch';
+import * as base64 from 'base64-js';
 
 const fetch = createFetch({
   defaults: {
-    baseURL: "https://cad.onshape.com/api/v6",
+    baseURL: 'https://cad.onshape.com/api/v6',
   },
 });
 let auth: string | undefined;
@@ -22,7 +22,7 @@ export const onshape = {
   setAuth(accessKey: string, secretKey: string) {
     auth = base64.fromByteArray(
       Uint8Array.from(
-        `${accessKey}:${secretKey}`.split("").map((x) => x.charCodeAt(0)),
+        `${accessKey}:${secretKey}`.split('').map((x) => x.charCodeAt(0)),
       ),
     );
   },
@@ -69,9 +69,9 @@ export namespace Onshape {
   export interface Element {
     name: string;
     id: string;
-    lengthUnits: "inch";
-    angleUnits: "degree";
-    massUnits: "pound";
+    lengthUnits: 'inch';
+    angleUnits: 'degree';
+    massUnits: 'pound';
   }
 
   export interface Bom {

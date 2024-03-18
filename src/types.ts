@@ -1,7 +1,7 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const ProjectSource = z.object({
-  type: z.literal("onshape"),
+  type: z.literal('onshape'),
   id: z.string(),
   assemblyId: z.string().optional(),
 });
