@@ -1,0 +1,69 @@
+export function convertMtoIn(value: number): number {
+  return value * 39.37008;
+}
+export function convertFtToIn(value: number): number {
+  return value * 12;
+}
+export function convertInToPx(value: number): number {
+  return value * 128;
+}
+
+export function toFraction(value: number, threshold = 1e-5) {
+  const integerPart = Math.floor(value);
+  const decimalPart = value - integerPart;
+
+  let minDifference = Infinity;
+  let closestFraction = decimalPart.toString();
+  for (let [fractionDecimal, fractionString] of fractionLookupTable) {
+    let difference = Math.abs(decimalPart - fractionDecimal);
+    if (difference < minDifference) {
+      minDifference = difference;
+      closestFraction = fractionString;
+    }
+  }
+
+  // If the decimal part is close enough to a fraction, prepare the result with the integer part
+  let result =
+    minDifference <= threshold ? closestFraction : decimalPart.toString();
+  if (integerPart > 0) {
+    result =
+      minDifference <= threshold || decimalPart === 0
+        ? `${integerPart}` + (decimalPart > 0 ? ` ${result}` : "")
+        : value.toString();
+  }
+  return result;
+}
+
+const fractionLookupTable = new Map<number, string>([
+  [1 / 32, "1/32"],
+  [1 / 16, "1/16"], // Simplified from 2/32
+  [3 / 32, "3/32"],
+  [1 / 8, "1/8"], // Simplified from 4/32
+  [5 / 32, "5/32"],
+  [3 / 16, "3/16"], // Simplified from 6/32
+  [7 / 32, "7/32"],
+  [1 / 4, "1/4"], // Simplified from 8/32
+  [9 / 32, "9/32"],
+  [5 / 16, "5/16"], // Simplified from 10/32
+  [11 / 32, "11/32"],
+  [3 / 8, "3/8"], // Simplified from 12/32
+  [13 / 32, "13/32"],
+  [7 / 16, "7/16"], // Simplified from 14/32
+  [15 / 32, "15/32"],
+  [1 / 2, "1/2"], // Simplified from 16/32
+  [17 / 32, "17/32"],
+  [9 / 16, "9/16"], // Simplified from 18/32
+  [19 / 32, "19/32"],
+  [5 / 8, "5/8"], // Simplified from 20/32
+  [21 / 32, "21/32"],
+  [11 / 16, "11/16"], // Simplified from 22/32
+  [23 / 32, "23/32"],
+  [3 / 4, "3/4"], // Simplified from 24/32
+  [25 / 32, "25/32"],
+  [13 / 16, "13/16"], // Simplified from 26/32
+  [27 / 32, "27/32"],
+  [7 / 8, "7/8"], // Simplified from 28/32
+  [29 / 32, "29/32"],
+  [15 / 16, "15/16"], // Simplified from 30/32
+  [31 / 32, "31/32"],
+]);
