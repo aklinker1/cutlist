@@ -7,7 +7,7 @@ import { Distance } from './units';
 
 export type * from './types';
 
-export async function getCutlist(
+export async function getBoardLayouts(
   onshape: OnshapeApiClient,
   project: Project,
   stock: StockMatrix[],
