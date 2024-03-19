@@ -1,6 +1,8 @@
 # onshape-cutlist
 
-CLI tool for generating cutlists.
+Website and NPM tool for generating cutlists for an onshape assembly.
+
+~[Screenshot](./.github/assets/demo.png)
 
 ## Usage
 
