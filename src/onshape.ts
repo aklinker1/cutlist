@@ -1,57 +1,65 @@
 import { createFetch } from 'ofetch';
 import * as base64 from 'base64-js';
+import consola from 'consola';
 
-const fetch = createFetch({
-  defaults: {
-    baseURL: 'https://cad.onshape.com/api/v6',
-  },
-});
-let auth: string | undefined;
+export function defineOnshapeApi(config: {
+  baseUrl?: string;
+  auth?: {
+    accessKey: string;
+    secretKey: string;
+  };
+}) {
+  const getAuthHeaders = () => {
+    if (config.auth == null) return undefined;
 
-function getHeaders(
-  headers?: Record<string, string>,
-): Record<string, string> | undefined {
-  if (auth == null) return headers;
+    const encoded = base64.fromByteArray(
+      Uint8Array.from(
+        `${config.auth.accessKey}:${config.auth.secretKey}`
+          .split('')
+          .map((x) => x.charCodeAt(0)),
+      ),
+    );
+    return {
+      Authorization: `Basic ${encoded}`,
+    };
+  };
+  const fetch = createFetch({
+    defaults: {
+      baseURL: config.baseUrl ?? 'https://cad.onshape.com/api/v6',
+      headers: getAuthHeaders(),
+      onResponseError(context) {
+        consola.error(context.response._data);
+      },
+    },
+  });
+
   return {
-    ...headers,
-    Authorization: `Basic ${auth}`,
+    fetch,
+    getAuthHeaders,
+    getDocument: async (did: string) =>
+      fetch<Onshape.Document>(`/documents/${did}`),
+    getAssemblies: async (did: string, wvmid: string) =>
+      fetch<Onshape.Element[]>(
+        `/documents/d/${did}/w/${wvmid}/elements?elementType=Assembly`,
+      ),
+    getAssemblyBom: async (did: string, wvmid: string, eid: string) =>
+      fetch<Onshape.Bom>(
+        `/assemblies/d/${did}/w/${wvmid}/e/${eid}/bom?indented=false`,
+      ),
+    getPartBoundingBox: async (
+      did: string,
+      wvm: string,
+      wvmid: string,
+      eid: string,
+      partid: string,
+    ) =>
+      fetch<Onshape.BoundingBox>(
+        `/parts/d/${did}/${wvm}/${wvmid}/e/${eid}/partid/${partid}/boundingboxes`,
+      ),
   };
 }
 
-export const onshape = {
-  setAuth(accessKey: string, secretKey: string) {
-    auth = base64.fromByteArray(
-      Uint8Array.from(
-        `${accessKey}:${secretKey}`.split('').map((x) => x.charCodeAt(0)),
-      ),
-    );
-  },
-  getDocument: async (did: string) =>
-    fetch<Onshape.Document>(`/documents/${did}`, { headers: getHeaders() }),
-  getAssemblies: async (did: string, wvmid: string) =>
-    fetch<Onshape.Element[]>(
-      `/documents/d/${did}/w/${wvmid}/elements?elementType=Assembly`,
-      { headers: getHeaders() },
-    ),
-  getAssemblyBom: async (did: string, wvmid: string, eid: string) =>
-    fetch<Onshape.Bom>(
-      `/assemblies/d/${did}/w/${wvmid}/e/${eid}/bom?indented=false`,
-      {
-        headers: getHeaders(),
-      },
-    ),
-  getPartBoundingBox: async (
-    did: string,
-    wvm: string,
-    wvmid: string,
-    eid: string,
-    partid: string,
-  ) =>
-    fetch<Onshape.BoundingBox>(
-      `/parts/d/${did}/${wvm}/${wvmid}/e/${eid}/partid/${partid}/boundingboxes`,
-      { headers: getHeaders() },
-    ),
-};
+export type OnshapeApiClient = ReturnType<typeof defineOnshapeApi>;
 
 export namespace Onshape {
   export interface Document {

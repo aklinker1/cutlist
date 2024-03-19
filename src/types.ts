@@ -7,6 +7,8 @@ export const ProjectSource = z.object({
 });
 export type ProjectSource = z.infer<typeof ProjectSource>;
 
+const Distance = z.union([z.number(), z.string()]);
+
 export interface Stock {
   name: string;
   material: string;
@@ -18,9 +20,9 @@ export interface Stock {
 export const StockMatrix = z.object({
   name: z.string(),
   material: z.string(),
-  thickness: z.number(),
-  width: z.number(),
-  length: z.array(z.number()),
+  thickness: Distance,
+  width: Distance,
+  length: z.array(Distance),
 });
 export type StockMatrix = z.infer<typeof StockMatrix>;
 
@@ -40,3 +42,9 @@ export interface PartToCut {
     thickness: number;
   };
 }
+
+export const Config = z.object({
+  bladeWidth: Distance.default('0.125in'),
+  optimize: z.union([z.literal('space'), z.literal('cuts')]).default('cuts'),
+});
+export type Config = z.infer<typeof Config>;

@@ -1,20 +1,29 @@
-import { onshape } from './onshape';
-import type { PartToCut, Project, Stock, StockMatrix } from './types';
+import type { OnshapeApiClient } from './onshape';
+import type { PartToCut, Project, Stock, StockMatrix, Config } from './types';
 import consola from 'consola';
 import { p } from '@antfu/utils';
-import { convertInToPx, convertMtoIn } from './units';
 import { BoardLayout, Rectangle } from './geometry';
-import type { Config } from './config';
+import { Distance } from './units';
 
 export type * from './types';
-export * from './config';
+
+export async function getCutlist(
+  onshape: OnshapeApiClient,
+  project: Project,
+  stock: StockMatrix[],
+  config: Config,
+  debugObject?: (name: string, object: any) => Promise<void> | void,
+) {
+  const generator = createCutlistGenerator(onshape, config, debugObject);
+  const parts = await generator.getPartsToCut(project);
+  return await generator.generateBoardLayouts(parts, stock);
+}
 
 export function createCutlistGenerator(
+  onshape: OnshapeApiClient,
   config: Config,
-  debugObject?: (name: string, object: any) => Promise<void>,
+  debugObject?: (name: string, object: any) => Promise<void> | void,
 ) {
-  onshape.setAuth(config.accessKey, config.secretKey);
-
   return {
     getPartsToCut: async (project: Project): Promise<PartToCut[]> => {
       const did = project.source.id;
@@ -77,13 +86,13 @@ export function createCutlistGenerator(
           const material = headerIdToValue[materialHeaderId] as any;
           return {
             size: {
-              width: convertMtoIn(bounds.highY - bounds.lowY),
-              length: convertMtoIn(bounds.highX - bounds.lowX),
-              thickness: convertMtoIn(bounds.highZ - bounds.lowZ),
+              width: bounds.highY - bounds.lowY,
+              length: bounds.highX - bounds.lowX,
+              thickness: bounds.highZ - bounds.lowZ,
             },
             quantity: Number(headerIdToValue[quantityHeaderId]),
             name: String(headerIdToValue[nameHeaderId]),
-            material: material?.displayName,
+            material: material?.displayName ?? 'Unknown',
           };
         })
         .map((info, infoI) =>
@@ -127,7 +136,9 @@ export function createCutlistGenerator(
         const addedToExisting = layouts.find((layout) =>
           layout.tryAddPart(part),
         );
-        if (addedToExisting) continue;
+        if (addedToExisting) {
+          continue;
+        }
 
         const matchingStock = stockRectangles.find(
           (stock) => stock.data.material === part.material,
@@ -138,8 +149,13 @@ export function createCutlistGenerator(
           continue;
         }
 
-        layouts.push(new BoardLayout(matchingStock, config));
-        partQueue.unshift(part);
+        const newLayout = new BoardLayout(matchingStock, config);
+        const addedToNew = newLayout.tryAddPart(part);
+        if (addedToNew) {
+          layouts.push(newLayout);
+        } else {
+          leftovers.push(part);
+        }
       }
       debugObject?.('layouts', layouts);
       debugObject?.('leftovers', leftovers);
@@ -153,55 +169,9 @@ export function reduceStockMatrix(matrix: StockMatrix[]): Stock[] {
   return matrix.flatMap((item) =>
     item.length.map((length) => ({
       ...item,
-      length,
+      thickness: new Distance(item.thickness).m,
+      width: new Distance(item.width).m,
+      length: new Distance(length).m,
     })),
   );
-}
-
-export function generateSvg(layouts: BoardLayout[]) {
-  consola.info('Generating svg...');
-  const gap = 4; // in, not pixels
-  let marginLeft = 0;
-  let bounds = new Rectangle();
-  const { stocks, parts } = layouts.reduce<{
-    stocks: string[];
-    parts: string[];
-  }>(
-    (acc, layout, layoutIndex) => {
-      const stock = layout.stock.translate(marginLeft, 0).flipYAxis();
-      bounds = bounds.growTo(stock);
-      acc.stocks.push(
-        stock.toSvg({
-          id: `stock${layoutIndex}`,
-          stroke: 'black',
-          'stroke-width': 4,
-          fill: 'black',
-          'fill-opacity': 0.5,
-        }),
-      );
-      layout.placements.forEach((part) => {
-        const place = part.translate(marginLeft, 0).flipYAxis();
-        bounds = bounds.growTo(place);
-        acc.parts.push(
-          place.toSvg({
-            id: `part${part.data.partNumber}.${part.data.instanceNumber}`,
-            stroke: 'red',
-            'stroke-width': 4,
-            fill: 'none',
-          }),
-        );
-      });
-      marginLeft += stock.width + gap;
-      return acc;
-    },
-    { stocks: [], parts: [] },
-  );
-
-  const svgPadding = convertInToPx(2);
-  return `
-    <svg viewBox="${convertInToPx(bounds.x) - svgPadding} ${convertInToPx(bounds.y) - svgPadding} ${convertInToPx(bounds.width) + svgPadding * 2} ${convertInToPx(bounds.height) + svgPadding * 2}" height="100%" xmlns="http://www.w3.org/2000/svg">
-      ${stocks.join('\n')}
-      ${parts.join('\n')}
-    </svg>
-  `.trim();
 }

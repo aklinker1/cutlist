@@ -1,13 +1,3 @@
-export function convertMtoIn(value: number): number {
-  return value * 39.37008;
-}
-export function convertFtToIn(value: number): number {
-  return value * 12;
-}
-export function convertInToPx(value: number): number {
-  return value * 128;
-}
-
 export function toFraction(value: number, threshold = 1e-5) {
   const integerPart = Math.floor(value);
   const decimalPart = value - integerPart;
@@ -29,7 +19,7 @@ export function toFraction(value: number, threshold = 1e-5) {
     result =
       minDifference <= threshold || decimalPart === 0
         ? `${integerPart}` + (decimalPart > 0 ? ` ${result}` : '')
-        : value.toString();
+        : Number(value.toFixed(5)).toString();
   }
   return result;
 }
@@ -67,3 +57,29 @@ const fractionLookupTable = new Map<number, string>([
   [15 / 16, '15/16'], // Simplified from 30/32
   [31 / 32, '31/32'],
 ]);
+
+export class Distance {
+  readonly m: number;
+
+  constructor(v: number | string) {
+    if (typeof v === 'number') {
+      this.m = v;
+    } else if (v.endsWith('ft')) {
+      this.m = Number(v.replace('ft', '')) * 0.3048;
+    } else if (v.endsWith('in') || v.endsWith('"')) {
+      this.m = Number(v.replace(/(in|")/, '')) * 0.0254;
+    } else {
+      throw Error('Could not parse distance: ' + JSON.stringify(v));
+    }
+  }
+
+  get mm() {
+    return this.m * 1000;
+  }
+  get in() {
+    return this.m * 39.37008;
+  }
+  get ft() {
+    return this.m * 3.28084;
+  }
+}

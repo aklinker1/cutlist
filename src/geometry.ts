@@ -1,6 +1,5 @@
-import type { Config } from './config';
-import type { PartToCut, Stock } from './types';
-import { convertInToPx } from './units';
+import type { PartToCut, Stock, Config } from './types';
+import { Distance } from './units';
 
 export class Rectangle<TData> {
   x: number;
@@ -106,14 +105,6 @@ export class Rectangle<TData> {
     return new Rectangle(this.data, this.x, -this.y, this.width, -this.height);
   }
 
-  toSvg(attrs: Record<string, any>): string {
-    return `<rect x="${convertInToPx(this.x)}" y="${convertInToPx(this.y)}" width="${convertInToPx(this.width)}" height="${convertInToPx(this.height)}" ${Object.entries(
-      attrs,
-    )
-      .map(([key, value]) => `${key}="${value}"`)
-      .join(' ')} />`;
-  }
-
   toString() {
     return JSON.stringify(this);
   }
@@ -178,7 +169,7 @@ export class BoardLayout {
     return this.tryAddPartFn(part, () =>
       this.placements
         .flatMap((existing) => {
-          const { bladeWidth } = this.config;
+          const bladeWidth = new Distance(this.config.bladeWidth).m;
           return [
             // Left of stock and top of existing
             { x: this.stock.x, y: existing.top + bladeWidth },
@@ -219,11 +210,12 @@ export class BoardLayout {
       );
 
       // Add the spot above the last item in each column
+      const bladeWidth = new Distance(this.config.bladeWidth).m;
       const possiblePlacements: Rectangle<PartToCut>[] = [
         ...sameWidthColumns.values(),
       ].map(([x, items]) => {
         const last = items.at(-1);
-        const y = last == null ? 0 : last.top + this.config.bladeWidth;
+        const y = last == null ? 0 : last.top + bladeWidth;
         return new Rectangle(part, x, y, part.size.width, part.size.length);
       });
 
@@ -232,13 +224,20 @@ export class BoardLayout {
         (acc, items) => Math.max(acc, items[0].right),
         0,
       );
-      const newColumnX =
-        lastRight === 0 ? 0 : lastRight + this.config.bladeWidth;
+      const newColumnX = lastRight === 0 ? 0 : lastRight + bladeWidth;
       possiblePlacements.push(
         new Rectangle(part, newColumnX, 0, part.size.width, part.size.length),
       );
 
-      return possiblePlacements;
+      return (
+        possiblePlacements
+          // Pack tight to the bottom left (prefer left over bottom)
+          .toSorted((a, b) => {
+            if (Math.abs(a.x - b.x) > 1e-5) return a.x - b.x;
+            if (Math.abs(a.y - b.y) > 1e-5) return a.y - b.y;
+            return 0;
+          })
+      );
     });
   }
 
