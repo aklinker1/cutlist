@@ -5,17 +5,26 @@ const props = defineProps<{
   layout: BoardLayout;
 }>();
 
-const width = usePx(() => props.layout.stock.width);
-const height = usePx(() => props.layout.stock.height);
-const length = useFormattedDistance(() => props.layout.stock.height);
+const widthPx = usePx(() => props.layout.stock.width);
+const heightPx = usePx(() => props.layout.stock.height);
+
+const thickness = useFormattedDistance(() => props.layout.stock.data.thickness);
+const width = useFormattedDistance(() => props.layout.stock.data.width);
+const length = useFormattedDistance(() => props.layout.stock.data.length);
 </script>
 
 <template>
   <li class="flex flex-col items-center gap-4">
-    <p class="text-center">{{ layout.stock.data.name }} x {{ length }}</p>
+    <p class="text-center">
+      <span class="font-bold">{{ layout.stock.data.material }}</span>
+      <br />
+      <span class="text-sm"
+        >{{ thickness }} &times; {{ width }} &times; {{ length }}</span
+      >
+    </p>
     <div
       class="bg-gray-800 rounded relative ring-1 ring-gray-600 ring-inset"
-      :style="`width:${width};height:${height}`"
+      :style="`width:${widthPx};height:${heightPx}`"
     >
       <PartListItem
         v-for="placement of layout.placements"

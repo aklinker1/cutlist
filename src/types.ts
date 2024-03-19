@@ -10,7 +10,6 @@ export type ProjectSource = z.infer<typeof ProjectSource>;
 const Distance = z.union([z.number(), z.string()]);
 
 export interface Stock {
-  name: string;
   material: string;
   thickness: number;
   width: number;
@@ -18,7 +17,6 @@ export interface Stock {
 }
 
 export const StockMatrix = z.object({
-  name: z.string(),
   material: z.string(),
   thickness: Distance,
   width: Distance,
