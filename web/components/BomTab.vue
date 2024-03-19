@@ -7,7 +7,6 @@ const formatDistance = useFormatDistance();
 const rows = computed(() => {
   if (data.value == null) return [];
 
-  console.log(data.value);
   const map = [
     ...data.value?.layouts.flatMap((layout) =>
       layout.placements.map((p) => p.data),

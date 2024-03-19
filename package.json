@@ -1,6 +1,6 @@
 {
   "name": "onshape-cutlist",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -36,8 +36,12 @@
   "scripts": {
     "dev": "nuxt dev",
     "build:npm": "bun build.npm.ts",
-    "build:web": "nuxt generate",
+    "build:web": "bun build:web:nuxt && bun build:web:docker",
+    "build:web:nuxt": "nuxt build",
+    "build:web:docker": "docker build . -t aklinker1/cutlist --platform=linux/amd64",
     "preview:web": "nuxt preview",
+    "preview:web:docker": "docker run -it -p 3000:3000 --env-file .env aklinker1/cutlist",
+    "publish:web:docker": "docker push aklinker1/cutlist",
     "prepare": "simple-git-hooks",
     "postinstall": "nuxt prepare"
   },

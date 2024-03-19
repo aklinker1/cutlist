@@ -3,7 +3,7 @@ import useExtendedNitroApp from '~/server/composables/useExtendedNitroApp';
 
 export default defineEventHandler(async (event) => {
   const { onshape } = useExtendedNitroApp();
-  const url = event.req.originalUrl!.replace('/api/onshape/', '');
+  const url = event.node.req.originalUrl!.replace('/api/onshape/', '');
 
   try {
     return await onshape.fetch(url);

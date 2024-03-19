@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { Config, Project } from '~~/src';
 import { Distance } from '~~/src/units';
+import { version } from '~~/package.json';
 
 const url = useAssemblyUrl();
 
@@ -58,6 +59,16 @@ const tab = ref<'bom' | 'boards' | 'settings' | 'warnings'>('bom');
       >
         <UIcon name="i-heroicons-cube" class="text-primary" />
         <span><span class="text-primary">Onshape</span> Cutlist Optimizer</span>
+        <UButton
+          icon="i-mdi-github"
+          color="white"
+          square
+          size="xs"
+          to="https://github.com/aklinker1/onshape-cutlist"
+          target="_blank"
+        >
+          {{ version }}
+        </UButton>
       </h2>
 
       <UFormGroup class="px-8" label="Assembly URL:">
@@ -91,7 +102,7 @@ const tab = ref<'bom' | 'boards' | 'settings' | 'warnings'>('bom');
 
       <UHorizontalNavigation
         :links="links"
-        class="px-8 border-b border-gray-200 dark:border-gray-700"
+        class="pl-8 border-b border-gray-200 dark:border-gray-700"
       />
     </header>
 

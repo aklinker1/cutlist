@@ -21,6 +21,7 @@ export default defineNuxtPlugin((nuxt) => {
       queries: {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
+        retry: false,
       },
     },
   });
