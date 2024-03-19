@@ -34,7 +34,7 @@
   "module": "./dist/npm/index.js",
   "types": "./dist/npm/index.d.ts",
   "scripts": {
-    "dev:web": "nuxt dev",
+    "dev": "nuxt dev",
     "build:npm": "bun build.npm.ts",
     "build:web": "nuxt generate",
     "preview:web": "nuxt preview",

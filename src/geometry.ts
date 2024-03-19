@@ -241,10 +241,20 @@ export class BoardLayout {
     });
   }
 
-  reduceStock(): BoardLayout {
-    return this;
-    // const sameMaterial = allStock.filter(
-    //   (stock) => stock.data.material === this.stock.data.material,
-    // );
+  reduceStock(allStock: Rectangle<Stock>[]): BoardLayout {
+    const validStock = allStock.filter(
+      (stock) => stock.data.material === this.stock.data.material,
+    );
+    const validLayouts = validStock
+      .map((stock) => {
+        const layout = new BoardLayout(stock, this.config);
+        this.placements.forEach(({ data: part }) => {
+          layout.tryAddPart(part);
+        });
+        return layout;
+      })
+      .filter((layout) => layout.placements.length === this.placements.length);
+    validLayouts.push(this);
+    return validLayouts.toSorted((a, b) => a.stock.area - b.stock.area)[0];
   }
 }

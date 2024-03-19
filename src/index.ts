@@ -160,7 +160,11 @@ export function createCutlistGenerator(
       debugObject?.('layouts', layouts);
       debugObject?.('leftovers', leftovers);
 
-      return { layouts, leftovers };
+      const optimizedLayouts = layouts.map((layout) =>
+        layout.reduceStock(stockRectangles),
+      );
+
+      return { layouts: optimizedLayouts, leftovers };
     },
   };
 }

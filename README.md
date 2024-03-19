@@ -5,7 +5,7 @@ Website and NPM tool for generating cutlists for an onshape assembly.
 > [!WARNING]
 > This is not published yet, neither the website nor the NPM package.
 
-![Screenshot](./.github/assets/demo.png)
+![Screenshot](./.github/assets/screenshot.png)
 
 ## Development
 
