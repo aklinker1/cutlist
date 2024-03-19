@@ -98,6 +98,7 @@ const tab = ref<'bom' | 'boards' | 'settings' | 'warnings'>('bom');
     <div class="relative flex-1">
       <div class="absolute inset-0 overflow-auto">
         <BomTab v-if="tab === 'bom'" />
+        <BoardsTab v-if="tab === 'boards'" class="p-8" />
         <WarningsTab v-if="tab === 'warnings'" class="p-8" />
         <SettingsTab v-else-if="tab === 'settings'" class="p-8" />
       </div>
