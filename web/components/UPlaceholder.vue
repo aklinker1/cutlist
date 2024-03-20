@@ -18,11 +18,7 @@ defineProps<{
         'color-primary': color === 'primary',
       }"
     />
-    <div v-if="$slots.default" class="absolute inset-0 flex">
-      <div class="m-auto block">
-        <slot />
-      </div>
-    </div>
+    <slot />
   </div>
 </template>
 
