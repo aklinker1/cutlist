@@ -16,9 +16,11 @@ const length = useFormattedDistance(() => props.layout.stock.data.length);
 <template>
   <li class="flex flex-col items-center gap-4">
     <p class="text-center">
-      <span class="font-bold">{{ layout.stock.data.material }}</span>
+      <span class="font-bold text-nowrap">{{
+        layout.stock.data.material
+      }}</span>
       <br />
-      <span class="text-sm"
+      <span class="text-xs text-nowrap"
         >{{ thickness }} &times; {{ width }} &times; {{ length }}</span
       >
     </p>

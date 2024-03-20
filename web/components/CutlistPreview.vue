@@ -3,7 +3,7 @@ const { data, isLoading, error } = useBoardLayoutsQuery();
 </script>
 
 <template>
-  <div class="flex flex-col bg">
+  <div class="flex flex-col dots-bg">
     <p v-if="error">{{ error }}</p>
     <template v-else-if="data">
       <p
@@ -26,7 +26,7 @@ const { data, isLoading, error } = useBoardLayoutsQuery();
 </template>
 
 <style scoped>
-.bg {
+.dots-bg {
   background-size: 40px 40px;
   background-image: radial-gradient(
     circle,

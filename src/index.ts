@@ -171,11 +171,15 @@ export function createCutlistGenerator(
 
 export function reduceStockMatrix(matrix: StockMatrix[]): Stock[] {
   return matrix.flatMap((item) =>
-    item.length.map((length) => ({
-      ...item,
-      thickness: new Distance(item.thickness).m,
-      width: new Distance(item.width).m,
-      length: new Distance(length).m,
-    })),
+    item.length.flatMap((length) =>
+      item.width.flatMap((width) =>
+        item.thickness.map((thickness) => ({
+          ...item,
+          thickness: new Distance(thickness).m,
+          width: new Distance(width).m,
+          length: new Distance(length).m,
+        })),
+      ),
+    ),
   );
 }

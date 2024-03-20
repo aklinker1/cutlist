@@ -19,15 +19,18 @@ const rows = computed(() => {
     return acc;
   }, new Map());
 
-  return [...map.values()].map((instanceList) => {
-    const part = instanceList[0];
-    return {
-      'Part Name': part.name,
-      QTY: instanceList.length,
-      Material: part.material,
-      [`Size (${distanceUnit.value})`]: `${formatDistance(part.size.thickness)} × ${formatDistance(part.size.width)} × ${formatDistance(part.size.length)}`,
-    };
-  });
+  return [...map.values()]
+    .toSorted((a, b) => a[0].partNumber - b[0].partNumber)
+    .map((instanceList) => {
+      const part = instanceList[0];
+      return {
+        '#': part.partNumber,
+        'Part Name': part.name,
+        QTY: instanceList.length,
+        Material: part.material,
+        [`Size (${distanceUnit.value})`]: `${formatDistance(part.size.thickness)} × ${formatDistance(part.size.width)} × ${formatDistance(part.size.length)}`,
+      };
+    });
 });
 </script>
 

@@ -18,8 +18,8 @@ export interface Stock {
 
 export const StockMatrix = z.object({
   material: z.string(),
-  thickness: Distance,
-  width: Distance,
+  thickness: z.array(Distance),
+  width: z.array(Distance),
   length: z.array(Distance),
 });
 export type StockMatrix = z.infer<typeof StockMatrix>;

@@ -15,7 +15,7 @@ const isExpanded = useIsExpanded();
       <div class="flex-1 relative">
         <!-- Cutlist Preview -->
         <div class="absolute inset-0 overflow-auto">
-          <CutlistPreview class="min-h-full" />
+          <CutlistPreview class="min-h-full min-w-full dots-bg w-max" />
         </div>
 
         <!-- Controlls -->
