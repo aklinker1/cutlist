@@ -2,10 +2,19 @@
 
 Website and NPM tool for generating cutlists for an onshape assembly.
 
-> [!WARNING]
-> This is not published yet, neither the website nor the NPM package.
-
 ![Screenshot](./.github/assets/screenshot.png)
+
+> [!WARNING]
+> NPM package is not published yet. Might not publish it.
+
+## Usage
+
+This tool only works for assemblies on the main workspace.
+
+1. Enter assembly's URL into the URL input
+2. In onshape, assign materials to all your parts
+3. Add boards to your project, using the material names you just selected
+4. Go buy the boards you need and use the layouts to make your cuts!
 
 ## Development
 
@@ -15,11 +24,14 @@ To install dependencies:
 bun install
 ```
 
-To build
+To start the website in dev mode, copy `.env.example` and fill out values from an API key [here](https://dev-portal.onshape.com/keys) (create one if none exist), then run:
 
-```bash
-bun build:npm
-bun build:bin
+```sh
+bun dev
 ```
 
-This project was created using `bun init` in bun v1.0.31. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+To publish docker image:
+
+```bash
+bun publish:web:docker
+```
