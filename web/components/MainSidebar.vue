@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { Config, Project } from '~~/src';
 import { Distance } from '~~/src/units';
-import { version } from '~~/package.json';
 
 const url = useAssemblyUrl();
 
@@ -54,22 +53,35 @@ const tab = ref<'bom' | 'boards' | 'settings' | 'warnings'>('bom');
 <template>
   <div class="flex flex-col">
     <header class="flex flex-col gap-4 shrink-0">
-      <h2
-        class="px-8 pt-8 text-2xl font-bold flex items-center justify-center gap-2"
-      >
-        <UIcon name="i-heroicons-cube" class="text-primary" />
-        <span><span class="text-primary">Onshape</span> Cutlist Optimizer</span>
-        <UButton
-          icon="i-mdi-github"
-          color="white"
-          square
-          size="xs"
-          to="https://github.com/aklinker1/onshape-cutlist"
-          target="_blank"
-        >
-          {{ version }}
-        </UButton>
-      </h2>
+      <div class="px-8 pt-8">
+        <h2 class="text-2xl font-bold flex items-center justify-center gap-2">
+          <UIcon name="i-noto-wood" class="text-primary" />
+          <span class="text-primary">Onshape</span> Cutlist Generator
+        </h2>
+        <div class="flex gap-2 items-center justify-center opacity-50">
+          <ULink
+            class="underline"
+            color="black"
+            variant="ghost"
+            square
+            to="https://github.com/aklinker1/onshape-cutlist/wiki"
+            target="_blank"
+          >
+            User Manual
+          </ULink>
+          <span>&bull;</span>
+          <ULink
+            class="underline"
+            color="black"
+            variant="ghost"
+            square
+            to="https://github.com/aklinker1/onshape-cutlist"
+            target="_blank"
+          >
+            GitHub
+          </ULink>
+        </div>
+      </div>
 
       <UFormGroup class="px-8" label="Assembly URL:">
         <UInput

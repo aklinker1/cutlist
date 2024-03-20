@@ -14,4 +14,20 @@ export default defineNuxtConfig({
   nitro: {
     plugins: [resolve('web/server/plugins/onshape.ts')],
   },
+  app: {
+    head: {
+      title: 'Onshape Cutlist Generator',
+      htmlAttrs: {
+        lang: 'en',
+      },
+      link: [{ rel: 'icon', href: 'favicon.svg' }],
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Find the best way to cut boards and panels for projects designed in Onshape. When you make changes to your design, the cutlist updates automatically.',
+        },
+      ],
+    },
+  },
 });
