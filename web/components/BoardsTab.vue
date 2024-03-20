@@ -5,6 +5,8 @@ const stock = useStock();
 </script>
 
 <template>
-  <p>Boards:</p>
-  <pre>{{ stock }}</pre>
+  <div>
+    <p>Boards:</p>
+    <pre>{{ stock }}</pre>
+  </div>
 </template>
