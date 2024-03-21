@@ -24,8 +24,8 @@ const links = computed(() => [
   {
     label: 'Boards',
     icon: 'i-heroicons-truck',
-    active: tab.value === 'boards',
-    click: () => void (tab.value = 'boards'),
+    active: tab.value === 'stock',
+    click: () => void (tab.value = 'stock'),
   },
   {
     label: 'Warnings',
@@ -47,7 +47,7 @@ const links = computed(() => [
   },
 ]);
 
-const tab = ref<'bom' | 'boards' | 'settings' | 'warnings'>('bom');
+const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
 </script>
 
 <template>
@@ -121,7 +121,7 @@ const tab = ref<'bom' | 'boards' | 'settings' | 'warnings'>('bom');
     <div class="relative flex-1">
       <div class="absolute inset-0 overflow-auto">
         <BomTab v-if="tab === 'bom'" />
-        <BoardsTab v-if="tab === 'boards'" class="p-8" />
+        <StockTab v-if="tab === 'stock'" />
         <WarningsTab v-if="tab === 'warnings'" class="p-8" />
         <SettingsTab v-else-if="tab === 'settings'" class="p-8" />
       </div>

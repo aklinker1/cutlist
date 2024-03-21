@@ -5,7 +5,7 @@ import { p } from '@antfu/utils';
 import { BoardLayout, Rectangle } from './geometry';
 import { Distance } from './units';
 
-export type * from './types';
+export * from './types';
 
 export async function getBoardLayouts(
   onshape: OnshapeApiClient,
