@@ -20,6 +20,8 @@ const fontSize = usePx(() =>
     0.0254, // 1 in to m
   ),
 );
+
+const showPartNumbers = useShowPartNumbers();
 </script>
 
 <template>
@@ -34,6 +36,7 @@ const fontSize = usePx(() =>
       :style="`width:${width};height:${height}`"
     >
       <p
+        v-if="showPartNumbers"
         class="w-full text-clip text-gray-400 group-hover:text-primary text-right p-px"
         :style="`font-size:${fontSize};line-height:${fontSize}`"
       >
