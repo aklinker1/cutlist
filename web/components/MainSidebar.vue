@@ -22,7 +22,7 @@ const links = computed(() => [
     click: () => void (tab.value = 'bom'),
   },
   {
-    label: 'Boards',
+    label: 'Stock',
     icon: 'i-heroicons-truck',
     active: tab.value === 'stock',
     click: () => void (tab.value = 'stock'),

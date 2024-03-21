@@ -21,8 +21,8 @@ const showPartNumbers = useShowPartNumbers();
 
     <UCheckbox v-model="showPartNumbers" label="Show part numbers in preview" />
 
-    <p class="text-sm opacity-50">
-      Settings are restored when returning to the website.
+    <p class="text-sm opacity-50 text-center pt-8">
+      Settings are saved when returning to the website.
     </p>
   </div>
 </template>
