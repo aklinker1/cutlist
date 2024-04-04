@@ -4,7 +4,7 @@ node_modules
 .nuxt
 .nitro
 .cache
-dist
+dist/*
 coverage
 .cutlistrc
 .DS_Store
