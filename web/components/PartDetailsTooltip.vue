@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import type { BoardLayoutPlacement } from '@aklinker1/cutlist';
+
 const props = defineProps<{
-  part: Rectangle<PartToCut>;
+  part: BoardLayoutPlacement;
 }>();
 
 const { x, y } = useGlobalMouse();
@@ -14,7 +16,7 @@ const { x, y } = useGlobalMouse();
   >
     <PartDetails
       class="translate-x-[-50%] translate-y-8 p-2 bg-gray-600 rounded shadow-xl min-w-[256px]"
-      :part="part.data"
+      :part="part"
       :placement="part"
     />
   </div>

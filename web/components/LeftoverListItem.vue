@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { useElementHover } from '@vueuse/core';
+import type { BoardLayoutLeftover } from '@aklinker1/cutlist';
 
 const props = defineProps<{
-  part: PartToCut;
+  part: BoardLayoutLeftover;
 }>();
-const width = useFormattedDistance(() => props.part.size.width);
-const length = useFormattedDistance(() => props.part.size.length);
-const thickness = useFormattedDistance(() => props.part.size.thickness);
+const width = useFormattedDistance(() => props.part.widthM);
+const length = useFormattedDistance(() => props.part.lengthM);
+const thickness = useFormattedDistance(() => props.part.thicknessM);
 </script>
 
 <template>

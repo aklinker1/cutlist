@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-import type { Config, Project } from '@aklinker1/cutlist';
-import { Distance } from '@aklinker1/cutlist';
+import type { HorizontalNavigationLink } from '#ui/types';
 
 const url = useAssemblyUrl();
 
-const { data: doc, isLoading: isLoadingDoc } = useDocumentQuery();
+const { data: doc, isFetching: isFetchingDoc } = useDocumentQuery();
+const { isFetching: isFetchingLayouts } = useBoardLayoutsQuery();
+
+const refresh = useRefreshOnshapeQueries();
 
 const { data: boardLayouts } = useBoardLayoutsQuery();
 
@@ -14,7 +16,7 @@ const warningsBadge = computed(() => {
   return leftovers.length;
 });
 
-const links = computed(() => [
+const links = computed<HorizontalNavigationLink[]>(() => [
   {
     label: 'BOM',
     icon: 'i-heroicons-table-cells',
@@ -91,24 +93,34 @@ const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
           color="white"
           :trailing="false"
           placeholder="Enter URL..."
-          :loading="isLoadingDoc"
+          :loading="isFetchingDoc"
         />
         <div
           v-if="doc"
-          class="py-2 px-3 bg-gray-900 rounded-lg border border-gray-700 mt-2 flex justify-between items-center"
+          class="p-2 pl-3 bg-gray-900 rounded-lg border border-gray-700 mt-2 flex justify-between items-center"
         >
           <p>
             {{ doc.name }}
             <span class="text-sm opacity-50">by {{ doc.owner.name }}</span>
           </p>
-          <ULink
-            :to="url"
-            target="_blank"
-            class="text-sm text-primary hover:underline flex items-center gap-1"
-          >
-            <span>Open</span>
-            <UIcon name="i-heroicons-arrow-top-right-on-square" />
-          </ULink>
+          <div class="flex items-center gap-2">
+            <UButton
+              title="Get latest parts from Onshape"
+              :icon="isFetchingLayouts ? undefined : 'i-heroicons-arrow-path'"
+              color="gray"
+              size="sm"
+              :loading="isFetchingLayouts"
+              @click="refresh"
+            />
+            <UButton
+              title="Open in Onshape"
+              :to="url"
+              target="_blank"
+              icon="i-heroicons-arrow-top-right-on-square"
+              color="gray"
+              size="sm"
+            />
+          </div>
         </div>
       </UFormGroup>
 

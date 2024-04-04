@@ -1,17 +1,22 @@
 <script lang="ts" setup>
+import type {
+  BoardLayoutLeftover,
+  BoardLayoutPlacement,
+} from '@aklinker1/cutlist';
+
 const props = defineProps<{
-  part: PartToCut;
-  placement?: Rectanble<any>;
+  part: BoardLayoutLeftover;
+  placement?: BoardLayoutPlacement;
 }>();
 
-const width = useFormattedDistance(() => props.part.size.width);
-const length = useFormattedDistance(() => props.part.size.length);
-const thickness = useFormattedDistance(() => props.part.size.thickness);
+const width = useFormattedDistance(() => props.part.widthM);
+const length = useFormattedDistance(() => props.part.lengthM);
+const thickness = useFormattedDistance(() => props.part.thicknessM);
 
-const top = useFormattedDistance(() => props.placement?.top);
-const left = useFormattedDistance(() => props.placement?.left);
-const right = useFormattedDistance(() => props.placement?.right);
-const bottom = useFormattedDistance(() => props.placement?.bottom);
+const top = useFormattedDistance(() => props.placement?.topM);
+const left = useFormattedDistance(() => props.placement?.leftM);
+const right = useFormattedDistance(() => props.placement?.rightM);
+const bottom = useFormattedDistance(() => props.placement?.bottomM);
 </script>
 
 <template>

@@ -17,7 +17,7 @@ const percent = computed(() => `${Math.round(scale.value * 100)}%`);
     />
     <UButton
       :title="`${percent} - Click to reset to 100%`"
-      class="w-20 text-center"
+      class="w-20 justify-center"
       size="lg"
       color="black"
       @click="resetZoom"

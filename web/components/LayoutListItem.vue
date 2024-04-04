@@ -1,24 +1,22 @@
 <script lang="ts" setup>
-import { Distance } from '@aklinker1/cutlist';
+import { type BoardLayout } from '@aklinker1/cutlist';
 
 const props = defineProps<{
   layout: BoardLayout;
 }>();
 
-const widthPx = usePx(() => props.layout.stock.width);
-const heightPx = usePx(() => props.layout.stock.height);
+const widthPx = usePx(() => props.layout.stock.widthM);
+const heightPx = usePx(() => props.layout.stock.lengthM);
 
-const thickness = useFormattedDistance(() => props.layout.stock.data.thickness);
-const width = useFormattedDistance(() => props.layout.stock.data.width);
-const length = useFormattedDistance(() => props.layout.stock.data.length);
+const thickness = useFormattedDistance(() => props.layout.stock.thicknessM);
+const width = useFormattedDistance(() => props.layout.stock.widthM);
+const length = useFormattedDistance(() => props.layout.stock.lengthM);
 </script>
 
 <template>
   <li class="flex flex-col items-center gap-4">
     <p class="text-center">
-      <span class="font-bold text-nowrap">{{
-        layout.stock.data.material
-      }}</span>
+      <span class="font-bold text-nowrap">{{ layout.stock.material }}</span>
       <br />
       <span class="text-xs text-nowrap"
         >{{ thickness }} &times; {{ width }} &times; {{ length }}</span

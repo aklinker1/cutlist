@@ -3,7 +3,7 @@ import { StockMatrix } from '@aklinker1/cutlist';
 import { z } from 'zod';
 import YAML from 'js-yaml';
 
-const model = defineModel<StockMatrix>();
+const model = defineModel<StockMatrix[]>();
 
 const getModelString = () =>
   YAML.dump(model.value, { indent: 2, flowLevel: 2 });

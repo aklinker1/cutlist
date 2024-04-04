@@ -1,22 +1,23 @@
 <script lang="ts" setup>
+import type { BoardLayoutPlacement } from '@aklinker1/cutlist';
 import { useElementHover } from '@vueuse/core';
 
 const props = defineProps<{
-  placement: Rectangle<PartToCut>;
+  placement: BoardLayoutPlacement;
 }>();
 
 const container = ref<HTMLDivElement>();
 const isHovered = useElementHover(container);
 
-const width = usePx(() => props.placement.width);
-const height = usePx(() => props.placement.height);
-const left = usePx(() => props.placement.left);
-const bottom = usePx(() => props.placement.bottom);
+const width = usePx(() => props.placement.widthM);
+const height = usePx(() => props.placement.lengthM);
+const left = usePx(() => props.placement.leftM);
+const bottom = usePx(() => props.placement.bottomM);
 
 const getPx = useGetPx();
 const fontSize = usePx(() =>
   Math.min(
-    props.placement.width / 2,
+    props.placement.widthM / 2,
     0.0254, // 1 in to m
   ),
 );
@@ -40,7 +41,7 @@ const showPartNumbers = useShowPartNumbers();
         class="w-full text-clip text-gray-400 group-hover:text-primary text-right p-px"
         :style="`font-size:${fontSize};line-height:${fontSize}`"
       >
-        {{ placement.data.partNumber }}
+        {{ placement.partNumber }}
       </p>
     </UPlaceholder>
     <PartDetailsTooltip v-if="isHovered" :part="placement" />

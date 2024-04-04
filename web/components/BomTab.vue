@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { BoardLayoutLeftover } from '@aklinker1/cutlist';
+
 const { data: doc } = useDocumentQuery();
 const { data, isLoading } = useBoardLayoutsQuery();
 const distanceUnit = useDistanceUnit();
@@ -8,11 +10,9 @@ const rows = computed(() => {
   if (data.value == null) return [];
 
   const map = [
-    ...data.value?.layouts.flatMap((layout) =>
-      layout.placements.map((p) => p.data),
-    ),
+    ...data.value?.layouts.flatMap((layout) => layout.placements),
     ...data.value?.leftovers,
-  ].reduce<Map<number, PartToCut[]>>((acc, part) => {
+  ].reduce<Map<number, BoardLayoutLeftover[]>>((acc, part) => {
     const items = acc.get(part.partNumber) ?? [];
     items.push(part);
     acc.set(part.partNumber, items);
@@ -28,7 +28,7 @@ const rows = computed(() => {
         'Part Name': part.name,
         QTY: instanceList.length,
         Material: part.material,
-        [`Size (${distanceUnit.value})`]: `${formatDistance(part.size.thickness)} × ${formatDistance(part.size.width)} × ${formatDistance(part.size.length)}`,
+        [`Size (${distanceUnit.value})`]: `${formatDistance(part.thicknessM)} × ${formatDistance(part.widthM)} × ${formatDistance(part.lengthM)}`,
       };
     });
 });
