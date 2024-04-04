@@ -1,10 +1,22 @@
-import type { PartToCut, Stock, Config } from './types';
+import type { PartToCut, Stock, Config, BoardLayout } from './types';
 import { Distance } from './units';
 
 export class Rectangle<TData> {
+  /**
+   * In meters
+   */
   x: number;
+  /**
+   * In meters
+   */
   y: number;
+  /**
+   * In meters
+   */
   width: number;
+  /**
+   * In meters
+   */
   height: number;
 
   constructor(
@@ -111,12 +123,19 @@ export class Rectangle<TData> {
 }
 
 export interface Point {
+  /**
+   * In meters
+   */
   x: number;
+  /**
+   * In meters
+   */
   y: number;
 }
 
-export class BoardLayout {
+export class BoardLayouter {
   readonly placements: Rectangle<PartToCut>[] = [];
+
   constructor(
     readonly stock: Rectangle<Stock>,
     readonly config: Config,
@@ -241,13 +260,13 @@ export class BoardLayout {
     });
   }
 
-  reduceStock(allStock: Rectangle<Stock>[]): BoardLayout {
+  reduceStock(allStock: Rectangle<Stock>[]): BoardLayouter {
     const validStock = allStock.filter(
       (stock) => stock.data.material === this.stock.data.material,
     );
     const validLayouts = validStock
       .map((stock) => {
-        const layout = new BoardLayout(stock, this.config);
+        const layout = new BoardLayouter(stock, this.config);
         this.placements.forEach(({ data: part }) => {
           layout.tryAddPart(part);
         });
@@ -256,5 +275,31 @@ export class BoardLayout {
       .filter((layout) => layout.placements.length === this.placements.length);
     validLayouts.push(this);
     return validLayouts.toSorted((a, b) => a.stock.area - b.stock.area)[0];
+  }
+
+  toBoardLayout(): BoardLayout {
+    return {
+      stock: {
+        material: this.stock.data.material,
+        widthM: this.stock.data.width,
+        lengthM: this.stock.data.length,
+        thicknessM: this.stock.data.thickness,
+      },
+      placements: this.placements.map((item) => ({
+        partNumber: item.data.partNumber,
+        instanceNumber: item.data.instanceNumber,
+        name: item.data.name,
+        material: item.data.material,
+        xM: item.x,
+        yM: item.y,
+        widthM: item.data.size.width,
+        lengthM: item.data.size.length,
+        thicknessM: item.data.size.thickness,
+        bottomM: item.bottom,
+        leftM: item.left,
+        rightM: item.right,
+        topM: item.top,
+      })),
+    };
   }
 }
