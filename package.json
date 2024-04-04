@@ -1,74 +1,19 @@
 {
-  "name": "@aklinker1/cutlist",
-  "version": "0.4.0",
-  "type": "module",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/aklinker1/cutlist"
-  },
-  "keywords": [
-    "onshape",
-    "cutlist",
-    "woodworking"
+  "private": true,
+  "workspaces": [
+    "npm",
+    "web"
   ],
-  "license": "MIT",
-  "author": {
-    "name": "Aaron Klinker",
-    "email": "aaronklinker1+npm@gmail.com"
-  },
-  "files": [
-    "bin",
-    "dist/npm"
-  ],
-  "bin": {
-    "cutlist": "./bin/cutlist.mjs"
-  },
-  "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/npm/index.d.ts",
-        "import": "./dist/npm/index.js"
-      }
-    }
-  },
-  "module": "./dist/npm/index.js",
-  "types": "./dist/npm/index.d.ts",
   "scripts": {
-    "dev": "nuxt dev",
-    "build:npm": "bun build.npm.ts",
-    "build:web": "bun build:web:nuxt && bun build:web:docker",
-    "build:web:nuxt": "nuxt build",
-    "build:web:docker": "docker build . -t aklinker1/cutlist --platform=linux/amd64",
-    "preview:web": "nuxt preview",
-    "preview:web:docker": "docker run -it -p 3000:3000 --env-file .env aklinker1/cutlist",
-    "publish:web:docker": "bun build:web && docker push aklinker1/cutlist",
-    "prepare": "simple-git-hooks",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "@antfu/utils": "^0.7.7",
-    "@tanstack/vue-query": "^5.28.4",
-    "base64-js": "^1.5.1",
-    "consola": "^3.2.3",
-    "js-yaml": "^4.1.0",
-    "ofetch": "^1.3.3",
-    "zod": "^3.22.4"
+    "dev": "bun --cwd web dev",
+    "check": "bun --cwd npm check && bun --cwd web check",
+    "prepare": "simple-git-hooks"
   },
   "devDependencies": {
-    "@aklinker1/check": "^1.1.0",
-    "@nuxt/ui": "^2.14.2",
     "@types/bun": "latest",
-    "@types/js-yaml": "^4.0.9",
-    "@vueuse/core": "^10.9.0",
-    "@vueuse/nuxt": "^10.9.0",
     "lint-staged": "^15.2.2",
-    "nuxt": "^3.11.0",
     "prettier": "^3.2.5",
-    "publint": "^0.2.7",
-    "simple-git-hooks": "^2.11.0",
-    "typescript": "^5.0.0",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "simple-git-hooks": "^2.11.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
@@ -80,5 +25,9 @@
     "excludeAuthors": [
       "aaronklinker1@gmail.com"
     ]
+  },
+  "dependencies": {
+    "@aklinker1/check": "^1.3.1",
+    "standard-version": "^9.5.0"
   }
 }

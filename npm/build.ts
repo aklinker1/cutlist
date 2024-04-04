@@ -1,6 +1,6 @@
 // Cleanup
 import { rmdir } from 'node:fs/promises';
-await rmdir('dist/npm', { recursive: true }).catch(() => {});
+await rmdir('dist', { recursive: true }).catch(() => {});
 import pkg from './package.json';
 
 // Build Declaration File
@@ -12,8 +12,8 @@ if (tsc.exitCode != null && tsc.exitCode > 0) process.exit(tsc.exitCode);
 
 // Build JS
 await Bun.build({
-  entrypoints: ['src/index.ts'],
-  outdir: 'dist/npm',
+  entrypoints: ['src/index.ts', 'src/onshape.ts'],
+  outdir: 'dist',
   target: 'node',
   splitting: true,
   external: Object.keys(pkg.dependencies).concat(
@@ -21,4 +21,4 @@ await Bun.build({
   ),
 });
 
-console.log('\x1b[1m\x1b[32m✔\x1b[0m Build \x1b[36mdist/npm\x1b[0m');
+console.log('\x1b[1m\x1b[32m✔\x1b[0m Build \x1b[36mdist\x1b[0m');

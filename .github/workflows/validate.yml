@@ -7,22 +7,27 @@ on:
       - main
 
 jobs:
-  checks:
+  npm-checks:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: bun build:npm
+      - run: bun run build
+        working-directory: npm
       - run: bun check
-  build:
+        working-directory: npm
+      - run: bun test
+        working-directory: npm
+  web-checks:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: bun build:web:nuxt
-  tests:
+      - run: bun check
+        working-directory: npm
+  web-build:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - uses: bun test
+      - run: bun run build:web:nuxt

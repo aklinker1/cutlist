@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { StockMatrix } from '~~/src';
+import { StockMatrix } from '@aklinker1/cutlist';
 import { z } from 'zod';
 import YAML from 'js-yaml';
 

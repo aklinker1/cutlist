@@ -1,4 +1,4 @@
-import { defineOnshapeApi } from '~~/src/onshape';
+import { defineOnshapeApi } from '@aklinker1/cutlist/onshape';
 
 export default createGlobalState(() =>
   defineOnshapeApi({

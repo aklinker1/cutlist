@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { Config, Project } from '~~/src';
-import { Distance } from '~~/src/units';
+import type { Config, Project } from '@aklinker1/cutlist';
+import { Distance } from '@aklinker1/cutlist';
 
 const url = useAssemblyUrl();
 
