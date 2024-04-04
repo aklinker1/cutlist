@@ -7,23 +7,23 @@ const isExpanded = useIsExpanded();
     <ClientOnly>
       <MainSidebar
         v-if="!isExpanded"
-        class="bg-gray-50 dark:bg-gray-800 shrink-0 print:hidden min-w-[28rem]"
+        class="bg-gray-50 dark:bg-gray-800 shrink-0 print:hidden min-w-[28rem] relative z-10"
       />
     </ClientOnly>
 
     <ClientOnly>
-      <div class="flex-1 relative">
-        <!-- Cutlist Preview -->
-        <div class="absolute inset-0 overflow-auto">
-          <CutlistPreview class="min-h-full min-w-full dots-bg w-max" />
-        </div>
-
-        <!-- Controlls -->
-        <div class="absolute bottom-4 right-4 flex gap-4 print:hidden">
-          <ScaleController class="bg-white rounded shadow-2xl" />
-          <FitController class="bg-white rounded shadow-2xl" />
-        </div>
-      </div>
+      <CutlistPreview class="flex-1 relative z-0 dots-bg" />
     </ClientOnly>
   </div>
 </template>
+
+<style scoped>
+.dots-bg {
+  background-size: 40px 40px;
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 20%) 2px,
+    rgba(255, 255, 255, 0) 1px
+  );
+}
+</style>

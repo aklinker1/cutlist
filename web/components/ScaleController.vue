@@ -1,8 +1,15 @@
 <script lang="ts" setup>
-const scale = useScale();
-const { zoomIn, zoomOut, resetZoom } = useScaleControls();
+const props = defineProps<{
+  scale: number;
+}>();
 
-const percent = computed(() => `${Math.round(scale.value * 100)}%`);
+const emit = defineEmits<{
+  zoomOut: [];
+  zoomIn: [];
+  resetZoom: [];
+}>();
+
+const percent = computed(() => `${Math.round(props.scale * 100)}%`);
 </script>
 
 <template>
@@ -13,23 +20,24 @@ const percent = computed(() => `${Math.round(scale.value * 100)}%`);
       size="lg"
       color="black"
       icon="i-heroicons-minus"
-      @click="zoomOut"
+      @click="emit('zoomOut')"
     />
     <UButton
       :title="`${percent} - Click to reset to 100%`"
       class="w-20 justify-center"
       size="lg"
       color="black"
-      @click="resetZoom"
+      @click="emit('resetZoom')"
     >
       {{ percent }}
     </UButton>
     <UButton
+      title="Zoom in"
       square
       size="lg"
       color="black"
       icon="i-heroicons-plus"
-      @click="zoomIn"
+      @click="emit('zoomIn')"
     />
   </div>
 </template>

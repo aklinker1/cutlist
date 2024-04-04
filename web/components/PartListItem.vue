@@ -14,7 +14,6 @@ const height = usePx(() => props.placement.lengthM);
 const left = usePx(() => props.placement.leftM);
 const bottom = usePx(() => props.placement.bottomM);
 
-const getPx = useGetPx();
 const fontSize = usePx(() =>
   Math.min(
     props.placement.widthM / 2,
@@ -44,6 +43,12 @@ const showPartNumbers = useShowPartNumbers();
         {{ placement.partNumber }}
       </p>
     </UPlaceholder>
-    <PartDetailsTooltip v-if="isHovered" :part="placement" />
+    <Teleport to="body">
+      <PartDetailsTooltip
+        v-if="isHovered"
+        :part="placement"
+        class="pointer-events-none"
+      />
+    </Teleport>
   </div>
 </template>
