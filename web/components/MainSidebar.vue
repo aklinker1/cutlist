@@ -64,7 +64,7 @@ const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
             color="black"
             variant="ghost"
             square
-            to="https://github.com/aklinker1/onshape-cutlist/wiki"
+            to="https://github.com/aklinker1/cutlist/wiki"
             target="_blank"
           >
             User Manual
@@ -75,7 +75,7 @@ const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
             color="black"
             variant="ghost"
             square
-            to="https://github.com/aklinker1/onshape-cutlist"
+            to="https://github.com/aklinker1/cutlist"
             target="_blank"
           >
             GitHub

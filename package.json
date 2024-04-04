@@ -1,10 +1,10 @@
 {
-  "name": "onshape-cutlist",
+  "name": "@aklinker1/cutlist",
   "version": "0.4.0",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aklinker1/onshape-cutlist"
+    "url": "https://github.com/aklinker1/cutlist"
   },
   "keywords": [
     "onshape",
