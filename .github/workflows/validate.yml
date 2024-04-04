@@ -24,10 +24,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: bun check
-        working-directory: npm
+        working-directory: web
   web-build:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: bun run build:nuxt
+        working-directory: web
