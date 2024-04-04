@@ -36,7 +36,7 @@ const links = computed<HorizontalNavigationLink[]>(() => [
     badge: warningsBadge.value
       ? {
           color: 'yellow',
-          label: warningsBadge.value,
+          label: String(warningsBadge.value),
         }
       : undefined,
     click: () => void (tab.value = 'warnings'),
