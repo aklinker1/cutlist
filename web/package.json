@@ -10,7 +10,7 @@
     "build:docker": "docker build . -t aklinker1/cutlist --platform=linux/amd64",
     "preview:web": "nuxt preview",
     "preview:web:docker": "docker run -it -p 3000:3000 --env-file .env aklinker1/cutlist",
-    "publish:web:docker": "bun build && docker push aklinker1/cutlist",
+    "publish:web:docker": "bun run build && docker push aklinker1/cutlist",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
