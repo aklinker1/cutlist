@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/vue-query';
 import { useOnshapeUrl } from './useOnshapeUrl';
-import { type Project, getBoardLayouts, type Config } from '~~/src';
+import { type Project, getBoardLayouts, type Config } from '@aklinker1/cutlist';
 
 export default function () {
   const onshape = useOnshapeApi();

@@ -1,4 +1,4 @@
-import type { StockMatrix } from '~~/src';
+import type { StockMatrix } from '@aklinker1/cutlist';
 
 export default createGlobalState(() =>
   useLocalStorage<StockMatrix[]>('@cutlist/stock', [

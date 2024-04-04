@@ -1,4 +1,4 @@
-# onshape-cutlist
+# @aklinker1/cutlist
 
 Website and NPM tool for generating cutlists for an onshape assembly.
 

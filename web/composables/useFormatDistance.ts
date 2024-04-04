@@ -1,4 +1,4 @@
-import { Distance, toFraction } from '~~/src/units';
+import { Distance, toFraction } from '@aklinker1/cutlist';
 
 export default function () {
   const unit = useDistanceUnit();

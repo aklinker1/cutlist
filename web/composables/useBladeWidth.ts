@@ -1,4 +1,4 @@
-import { Distance } from '~~/src/units';
+import { Distance } from '@aklinker1/cutlist';
 
 /**
  * Returns the blade width in standard units based off the settings.

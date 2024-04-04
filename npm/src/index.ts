@@ -6,6 +6,7 @@ import { BoardLayout, Rectangle } from './geometry';
 import { Distance } from './units';
 
 export * from './types';
+export * from './units';
 
 export async function getBoardLayouts(
   onshape: OnshapeApiClient,

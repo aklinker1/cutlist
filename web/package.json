@@ -1,0 +1,31 @@
+{
+  "name": "cutlist",
+  "version": "0.4.0",
+  "type": "module",
+  "scripts": {
+    "check": "check -b ../node_modules/.bin",
+    "dev": "nuxt dev",
+    "build": "bun build:nuxt && bun build:docker",
+    "build:nuxt": "nuxt build",
+    "build:docker": "docker build . -t aklinker1/cutlist --platform=linux/amd64",
+    "preview:web": "nuxt preview",
+    "preview:web:docker": "docker run -it -p 3000:3000 --env-file .env aklinker1/cutlist",
+    "publish:web:docker": "bun build && docker push aklinker1/cutlist",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@aklinker1/cutlist": "workspace:*",
+    "@tanstack/vue-query": "^5.28.4",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@nuxt/ui": "^2.14.2",
+    "@types/js-yaml": "^4.0.9",
+    "@vueuse/core": "^10.9.0",
+    "@vueuse/nuxt": "^10.9.0",
+    "nuxt": "^3.11.0",
+    "typescript": "^5.0.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  }
+}

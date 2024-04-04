@@ -1,0 +1,55 @@
+{
+  "name": "@aklinker1/cutlist",
+  "version": "0.4.0",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aklinker1/cutlist"
+  },
+  "keywords": [
+    "onshape",
+    "cutlist",
+    "woodworking"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Aaron Klinker",
+    "email": "aaronklinker1+npm@gmail.com"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js"
+      }
+    },
+    "./onshape": {
+      "import": {
+        "types": "./dist/onshape.d.ts",
+        "import": "./dist/onshape.js"
+      }
+    }
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "check": "check -b ../node_modules/.bin",
+    "dev": "bun test --watch",
+    "build": "bun build.ts",
+    "prepare": "bun run build"
+  },
+  "dependencies": {
+    "@antfu/utils": "^0.7.7",
+    "base64-js": "^1.5.1",
+    "consola": "^3.2.3",
+    "ofetch": "^1.3.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "publint": "^0.2.7",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { BoardLayout } from '~~/src';
-import { Distance } from '~~/src/units';
+import type { BoardLayout } from '@aklinker1/cutlist';
+import { Distance } from '@aklinker1/cutlist';
 
 defineProps<{
   layouts: BoardLayout[];

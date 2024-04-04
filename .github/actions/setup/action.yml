@@ -1,5 +1,5 @@
 name: Basic Setup
-description: Install PNPM, Node, and dependencies
+description: Install Bun and dependencies
 runs:
   using: composite
   steps:

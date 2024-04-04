@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Distance } from '~~/src/units';
+import { Distance } from '@aklinker1/cutlist';
 
 const props = defineProps<{
   layout: BoardLayout;
