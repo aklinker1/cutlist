@@ -1,0 +1,7 @@
+node_modules
+.output
+.nuxt
+.nitro
+.env
+.env.*
+!.env.example
