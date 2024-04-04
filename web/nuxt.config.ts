@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    plugins: [resolve('web/server/plugins/onshape.ts')],
+    plugins: [resolve('server/plugins/onshape.ts')],
   },
   app: {
     head: {
