@@ -38,7 +38,8 @@
   "scripts": {
     "check": "check -b ../node_modules/.bin",
     "dev": "bun test --watch",
-    "build": "bun build.ts"
+    "build": "bun build.ts",
+    "prepare": "bun run build"
   },
   "dependencies": {
     "@antfu/utils": "^0.7.7",

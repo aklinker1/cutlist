@@ -12,8 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: bun run build
-        working-directory: npm
       - run: bun check
         working-directory: npm
       - run: bun test
