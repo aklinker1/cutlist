@@ -5,5 +5,6 @@ import { Distance } from '@aklinker1/cutlist';
  */
 export default function () {
   const bladeWidth = useBladeWidthSetting();
-  return computed(() => new Distance(bladeWidth.value + 'in').m);
+  const unit = useDistanceUnit();
+  return computed(() => new Distance(bladeWidth.value + unit.value).m);
 }
