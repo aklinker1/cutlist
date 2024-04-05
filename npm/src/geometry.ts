@@ -135,11 +135,15 @@ export interface Point {
 
 export class BoardLayouter {
   readonly placements: Rectangle<PartToCut>[] = [];
+  private readonly paddedStock: Rectangle<Stock>;
 
   constructor(
     readonly stock: Rectangle<Stock>,
     readonly config: Config,
-  ) {}
+  ) {
+    const padding = -new Distance(config.extraSpace).m;
+    this.paddedStock = stock.pad({ right: padding, top: padding });
+  }
 
   tryAddPart(part: PartToCut): boolean {
     if (part.material !== this.stock.data.material) return false;
@@ -161,7 +165,7 @@ export class BoardLayouter {
     const possiblePositions: Point[] =
       this.placements.length === 0
         ? // Always position bottom left when empty
-          [{ x: this.stock.x, y: this.stock.y }]
+          [{ x: this.paddedStock.x, y: this.paddedStock.y }]
         : // Get possible locations from callback
           getPossiblePositions();
 
@@ -172,7 +176,7 @@ export class BoardLayouter {
       )
       .find(
         (placement) =>
-          placement.isInside(this.stock) &&
+          placement.isInside(this.paddedStock) &&
           this.placements.every((p) => !placement.isIntersecting(p)),
       );
 
@@ -191,9 +195,9 @@ export class BoardLayouter {
           const bladeWidth = new Distance(this.config.bladeWidth).m;
           return [
             // Left of stock and top of existing
-            { x: this.stock.x, y: existing.top + bladeWidth },
+            { x: this.paddedStock.x, y: existing.top + bladeWidth },
             // left of existing, bottom of stock
-            { x: existing.right + bladeWidth, y: this.stock.y },
+            { x: existing.right + bladeWidth, y: this.paddedStock.y },
 
             // Left of existing, top of other existing
             ...this.placements.map((existing2) => ({
@@ -262,7 +266,7 @@ export class BoardLayouter {
 
   reduceStock(allStock: Rectangle<Stock>[]): BoardLayouter {
     const validStock = allStock.filter(
-      (stock) => stock.data.material === this.stock.data.material,
+      (stock) => stock.data.material === this.paddedStock.data.material,
     );
     const validLayouts = validStock
       .map((stock) => {

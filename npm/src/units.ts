@@ -68,8 +68,13 @@ export class Distance {
       this.m = Number(v.replace('ft', '')) * 0.3048;
     } else if (v.endsWith('in') || v.endsWith('"')) {
       this.m = Number(v.replace(/(in|")/, '')) * 0.0254;
+    } else if (v.endsWith('mm')) {
+      this.m = Number(v.replace('mm', '')) / 1000;
     } else {
-      throw Error('Could not parse distance: ' + JSON.stringify(v));
+      this.m = Number(v.replace('m', ''));
+    }
+    if (isNaN(this.m)) {
+      throw Error('Could not convert to meters: ' + v);
     }
   }
 

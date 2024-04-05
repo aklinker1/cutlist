@@ -1,10 +1,10 @@
-import type {
-  PartToCut,
-  Stock,
-  StockMatrix,
+import {
+  type PartToCut,
+  type Stock,
+  type StockMatrix,
   Config,
-  BoardLayout,
-  BoardLayoutLeftover,
+  type BoardLayout,
+  type BoardLayoutLeftover,
 } from './types';
 import consola from 'consola';
 import { BoardLayouter, Rectangle } from './geometry';
@@ -26,6 +26,7 @@ export function generateBoardLayouts(
   layouts: BoardLayout[];
   leftovers: BoardLayoutLeftover[];
 } {
+  config = Config.parse(config);
   consola.info('Generating board layouts...');
 
   // Create geometry for stock and parts

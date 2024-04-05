@@ -80,6 +80,10 @@ export const Config = z.object({
    *    column, making it easier to cut out.
    */
   optimize: z.union([z.literal('space'), z.literal('cuts')]).default('cuts'),
+  /**
+   * Extra padding to add to the top and right sides of the boards/stock.
+   */
+  extraSpace: Distance.default('0'),
 });
 export type Config = z.infer<typeof Config>;
 
