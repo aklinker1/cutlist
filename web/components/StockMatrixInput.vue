@@ -32,7 +32,7 @@ const error = ref<unknown>();
   <div class="absolute inset-0 flex flex-col p-4 overlfow-auto gap-4">
     <textarea
       v-model="textModel"
-      class="font-mono flex-1 resize-none bg-gray-900 border border-gray-700 p-4 outline-none rounded-lg whitespace-pre"
+      class="font-mono flex-1 resize-none bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 p-4 outline-none rounded-lg whitespace-pre"
     />
     <div
       v-if="error"

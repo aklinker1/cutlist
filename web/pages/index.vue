@@ -1,29 +1,37 @@
 <script lang="ts" setup>
-const isExpanded = useIsExpanded();
+const createNewProject = useCreateNewProject();
+
+const projects = useProjects();
+const openProject = useOpenProject();
+const deleteProject = useDeleteProject();
 </script>
 
 <template>
-  <div class="fixed inset-0 flex bg-gray-900">
-    <ClientOnly>
-      <MainSidebar
-        v-if="!isExpanded"
-        class="bg-gray-50 dark:bg-gray-800 shrink-0 print:hidden min-w-[28rem] relative z-10"
-      />
-    </ClientOnly>
-
-    <ClientOnly>
-      <CutlistPreview class="flex-1 relative z-0 dots-bg" />
-    </ClientOnly>
+  <div class="bg-gray-200 dark:bg-gray-800 h-full p-8 flex">
+    <div class="w-full max-w-lg mx-auto flex flex-col gap-8">
+      <div class="flex">
+        <h1 class="flex-1 text-2xl font-medium">Projects</h1>
+        <UButton
+          class="shrink-0"
+          icon="i-heroicons-plus"
+          @click="createNewProject"
+          >New</UButton
+        >
+      </div>
+      <ClientOnly>
+        <ul class="flex flex-col gap-2">
+          <ProjectListItem
+            v-for="project of projects"
+            :key="project.id"
+            :project
+            @open="openProject"
+            @delete="deleteProject"
+          />
+          <li class="text-sm opacity-50 text-center py-4">
+            {{ projects.length }} projects
+          </li>
+        </ul>
+      </ClientOnly>
+    </div>
   </div>
 </template>
-
-<style scoped>
-.dots-bg {
-  background-size: 40px 40px;
-  background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 20%) 2px,
-    rgba(255, 255, 255, 0) 1px
-  );
-}
-</style>
