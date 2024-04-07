@@ -8,14 +8,16 @@ defineProps<{
   <div
     class="border border-dashed rounded relative"
     :class="{
-      'border-white border-opacity-40': color == null || color === 'white',
-      'border-primary': color === 'primary',
+      'border-gray-700 dark:border-gray-400 print:border-black':
+        color == null || color === 'white',
+      'border-primary-600 dark:border-primary': color === 'primary',
     }"
   >
     <div
       class="absolute inset-0.5 placeholder-bg"
       :class="{
-        'color-primary': color === 'primary',
+        'placeholder-bg-primary color-primary-600 dark:color-primary':
+          color === 'primary',
       }"
     />
     <slot />
@@ -24,7 +26,7 @@ defineProps<{
 
 <style scoped>
 .placeholder-bg {
-  --gradient-color: rgba(255, 255, 255, 20%);
+  --gradient-color: rgba(0, 0, 0, 20%);
   background-size: 10px 10px;
   background-image: linear-gradient(
       135deg,
@@ -45,7 +47,14 @@ defineProps<{
       transparent
     );
 }
-.placeholder-bg.color-primary {
+.dark .placeholder-bg {
+  --gradient-color: rgba(255, 255, 255, 20%);
+}
+
+.placeholder-bg-primary {
+  --gradient-color: rgba(var(--color-primary-DEFAULT) / 0.5);
+}
+.dark .placeholder-bg-primary {
   --gradient-color: rgb(var(--color-primary-DEFAULT) / 0.5);
 }
 </style>

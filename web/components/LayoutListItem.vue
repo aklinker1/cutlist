@@ -23,7 +23,7 @@ const length = useFormattedDistance(() => props.layout.stock.lengthM);
       >
     </p>
     <div
-      class="bg-gray-800 rounded relative ring-1 ring-gray-600 ring-inset"
+      class="bg-gray-200 dark:bg-gray-800 rounded relative ring-1 ring-gray-400 dark:ring-gray-600 print:ring-black ring-inset"
       :style="`width:${widthPx};height:${heightPx}`"
     >
       <PartListItem

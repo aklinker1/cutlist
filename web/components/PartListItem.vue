@@ -37,7 +37,7 @@ const showPartNumbers = useShowPartNumbers();
     >
       <p
         v-if="showPartNumbers"
-        class="w-full text-clip text-gray-400 group-hover:text-primary text-right p-px"
+        class="w-full text-clip text-gray-500 dark:text-gray-400 print:text-black group-hover:text-primary text-right p-px"
         :style="`font-size:${fontSize};line-height:${fontSize}`"
       >
         {{ placement.partNumber }}

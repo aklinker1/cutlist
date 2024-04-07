@@ -19,9 +19,7 @@ const { scale, resetZoom, zoomIn, zoomOut } = usePanZoom(container);
           No board layouts found
         </p>
         <div v-else ref="container">
-          <div class="flex flex-col">
-            <LayoutList :layouts="data.layouts" />
-          </div>
+          <LayoutList :layouts="data.layouts" />
         </div>
       </template>
 
@@ -34,17 +32,17 @@ const { scale, resetZoom, zoomIn, zoomOut } = usePanZoom(container);
       </div>
     </div>
 
-    <!-- Controlls -->
+    <!-- Controls -->
     <div class="absolute bottom-4 right-4 flex gap-4 print:hidden z-10">
       <ScaleController
         v-if="scale != null"
-        class="bg-white rounded shadow-2xl"
+        class="bg-black dark:bg-white rounded shadow-2xl"
         :scale="scale"
         @reset-zoom="resetZoom"
         @zoom-in="zoomIn"
         @zoom-out="zoomOut"
       />
-      <FitController class="bg-white rounded shadow-2xl" />
+      <FitController class="bg-black dark:bg-white rounded shadow-2xl" />
     </div>
   </div>
 </template>

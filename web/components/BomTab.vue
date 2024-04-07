@@ -35,7 +35,7 @@ const rows = computed(() => {
 </script>
 
 <template>
-  <div class="absolute inset-0">
+  <div class="absolute inset-0 print:relative">
     <p v-if="doc == null" class="text-center p-4 opacity-50">
       Enter an assembly URL to get started...
     </p>
