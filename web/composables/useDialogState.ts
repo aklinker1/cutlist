@@ -26,6 +26,7 @@ export default createGlobalState(() => {
 export interface DialogDefinition {
   'add-project': {
     title: string;
+    defaults?: Partial<Project>;
     onAdd: (project: Project) => void;
     onCancel: () => void;
   };

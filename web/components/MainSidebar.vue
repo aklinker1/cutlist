@@ -2,13 +2,10 @@
 import type { HorizontalNavigationLink } from '#ui/types';
 
 const url = useAssemblyUrl();
-
-const { data: doc, isFetching: isFetchingDoc } = useDocumentQuery();
+const { data: doc } = useDocumentQuery();
 const { isFetching: isFetchingLayouts } = useBoardLayoutsQuery();
-
-const refresh = useRefreshOnshapeQueries();
-
 const { data: boardLayouts } = useBoardLayoutsQuery();
+const refresh = useRefreshOnshapeQueries();
 
 const warningsBadge = computed(() => {
   const leftovers = boardLayouts.value?.leftovers ?? [];
@@ -50,6 +47,9 @@ const links = computed<HorizontalNavigationLink[]>(() => [
 ]);
 
 const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
+
+const project = useProject();
+const editProject = useEditProject();
 </script>
 
 <template>
@@ -61,7 +61,12 @@ const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
       >
         <div class="flex-1 page-break-after">
           <h1 class="text-lg font-medium">{{ doc.name }}</h1>
-          <p class="text-sm opacity-50">by {{ doc.owner.name }}</p>
+          <p class="text-sm opacity-50">
+            by {{ doc.owner.name }} &bull;
+            <ULink class="underline" :to="url" target="blank"
+              >Revision {{ doc.defaultWorkspace.id.substring(0, 7) }}</ULink
+            >
+          </p>
           <a
             class="text-sm opacity-50 hidden print:block"
             :href="url"
@@ -81,19 +86,11 @@ const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
         />
         <UButton
           class="print:hidden"
-          title="Open in Onshape"
-          :to="url"
-          target="_blank"
-          icon="i-heroicons-arrow-top-right-on-square"
-          color="gray"
-          size="sm"
-        />
-        <UButton
-          class="print:hidden"
           title="Change Project Source"
           icon="i-heroicons-pencil"
           color="gray"
           size="sm"
+          @click="editProject(project)"
         />
       </div>
 

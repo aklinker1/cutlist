@@ -6,8 +6,15 @@ const isOpen = useModalModel('add-project');
 const { state, closeDialog: _closeDialog } = useDialogState();
 const props = computed(() => state.value['add-project']);
 
+const id = ref<string>();
 const name = ref('');
 const url = ref('');
+
+whenever(props, (props) => {
+  id.value = props.defaults?.id;
+  name.value = props.defaults?.name ?? '';
+  url.value = props.defaults?.source?.url ?? '';
+});
 
 const closeDialog = () => _closeDialog('add-project');
 
@@ -15,7 +22,7 @@ const submit = () => {
   if (props.value == null) return;
 
   props.value.onAdd({
-    id: nanoid(),
+    id: id.value || nanoid(),
     name: name.value,
     source: { type: 'onshape', url: url.value },
   });
@@ -38,7 +45,12 @@ const dismiss = () => {
 
         <div class="flex flex-col gap-4">
           <UFormGroup label="Name" required>
-            <UInput type="text" placeholder="Enter a name..." v-model="name" />
+            <UInput
+              type="text"
+              placeholder="Enter a name..."
+              v-model="name"
+              autocomplete="off"
+            />
           </UFormGroup>
 
           <UFormGroup label="Onshape Assembly URL" required>

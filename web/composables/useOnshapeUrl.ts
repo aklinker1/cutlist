@@ -1,26 +1,9 @@
-export function useOnshapeUrl(url: MaybeRefOrGetter<string>) {
-  return computed<OnshapeUrl | undefined>(() => {
-    try {
-      const path = new URL(toValue(url)).pathname;
-      const matches =
-        /^\/documents\/(?<did>.*?)\/.*?\/(?<wvmid>.*?)\/e\/(?<eid>.*?)$/.exec(
-          path,
-        );
-      if (matches?.groups == null) return;
+import { parseOnshapeUrl } from '@aklinker1/cutlist/onshape';
 
-      return {
-        did: matches.groups.did,
-        wvmid: matches.groups.wvmid,
-        eid: matches.groups.eid,
-      };
-    } catch {
-      return;
-    }
+export default function (url: MaybeRefOrGetter<string | undefined>) {
+  return computed(() => {
+    const u = toValue(url);
+    if (u == null) return undefined;
+    return parseOnshapeUrl(u);
   });
-}
-
-export interface OnshapeUrl {
-  did: string;
-  wvmid: string;
-  eid: string;
 }

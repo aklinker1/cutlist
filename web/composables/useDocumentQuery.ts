@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/vue-query';
-import { useOnshapeUrl } from './useOnshapeUrl';
+import useOnshapeUrl from './useOnshapeUrl';
 
 export default function () {
   const onshape = useOnshapeLoader();

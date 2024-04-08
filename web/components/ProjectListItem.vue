@@ -10,23 +10,25 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <li class="flex">
-    <UButton
-      class="flex-1 flex gap-4 !rounded-r-none"
-      color="gray"
-      @click="emit('open', project.id)"
-    >
-      <UIcon class="w-6 h-6 opacity-50" name="i-heroicons-cube" />
-      <div class="flex-1 text-left">
-        <p class="text-lg">{{ project.name }}</p>
-        <p class="opacity-50 font-normal">Onshape</p>
-      </div>
-    </UButton>
-    <UButton
-      class="aspect-1 justify-center items-center !rounded-l-none"
-      color="gray"
-      icon="i-heroicons-trash"
-      @click="emit('delete', project.id)"
-    />
+  <li>
+    <UButtonGroup class="flex">
+      <UButton
+        class="flex-1 flex gap-4"
+        color="gray"
+        @click="emit('open', project.id)"
+      >
+        <UIcon class="w-6 h-6 ml-2 opacity-50" name="i-heroicons-cube" />
+        <div class="flex-1 text-left">
+          <p class="text-lg line-clamp-1">{{ project.name }}</p>
+          <p class="opacity-50 font-normal line-clamp-1">Onshape</p>
+        </div>
+      </UButton>
+      <UButton
+        class="justify-center items-center w-12"
+        color="gray"
+        icon="i-heroicons-trash"
+        @click="emit('delete', project.id)"
+      />
+    </UButtonGroup>
   </li>
 </template>

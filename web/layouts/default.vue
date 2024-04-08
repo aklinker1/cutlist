@@ -25,13 +25,15 @@ const closeTab = useCloseTab();
       </TabListItem>
 
       <!-- Projects -->
-      <TabListItem
-        v-for="tab in tabs"
-        :key="tab.id"
-        :name="tab.name"
-        :to="tab.to"
-        @close="closeTab(tab.id)"
-      />
+      <ClientOnly>
+        <TabListItem
+          v-for="tab in tabs"
+          :key="tab.id"
+          :name="tab.name"
+          :to="tab.to"
+          @close="closeTab(tab.id)"
+        />
+      </ClientOnly>
     </TabList>
     <div class="flex-1 relative">
       <div class="absolute inset-0 overflow-hidden">
@@ -48,5 +50,9 @@ const closeTab = useCloseTab();
 <style>
 .page-break-after {
   page-break-after: always;
+}
+
+* {
+  min-width: 0;
 }
 </style>
