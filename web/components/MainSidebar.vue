@@ -46,7 +46,7 @@ const links = computed<HorizontalNavigationLink[]>(() => [
   },
 ]);
 
-const tab = ref<'bom' | 'stock' | 'settings' | 'warnings'>('bom');
+const tab = useProjectTab();
 
 const project = useProject();
 const editProject = useEditProject();
