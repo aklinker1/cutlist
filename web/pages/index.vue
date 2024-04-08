@@ -45,6 +45,21 @@ const deleteProject = useDeleteProject();
             No projects,
             <ULink variant="link" @click="createNewProject">add one</ULink>
           </li>
+          <li class="text-center pt-16 opacity-50">
+            <ULink
+              class="underline"
+              to="https://github.com/aklinker1/cutlist"
+              target="blank"
+              >GitHub</ULink
+            >
+            &ensp;&bull;&ensp;
+            <ULink
+              class="underline"
+              to="https://github.com/aklinker1/cutlist/wiki"
+              target="blank"
+              >User Manual</ULink
+            >
+          </li>
         </ul>
       </ClientOnly>
     </div>

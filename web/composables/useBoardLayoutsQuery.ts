@@ -9,7 +9,8 @@ export default function () {
 
   const partsQuery = useQuery({
     queryKey: ['onshape', 'board-layouts', url],
-    queryFn: () => loader.getParts(url.value),
+    queryFn: () => loader.getParts(url.value!),
+    enabled: computed(() => url.value != null),
   });
 
   const layouts = computed(() => {

@@ -1,8 +1,6 @@
 export default function () {
   const { openDialog } = useDialogState();
-  const openProjectIds = useOpenProjectIds();
   const allProjects = useProjects();
-  const router = useRouter();
 
   const openExistingProject = (project: Project) =>
     new Promise<Project>((res, rej) => {
@@ -14,7 +12,9 @@ export default function () {
       });
     });
 
-  return async (project: Project) => {
+  return async (project: Project | undefined) => {
+    if (project == null) return;
+
     const newProject = await openExistingProject(project);
     allProjects.value = allProjects.value.map((p) =>
       p.id === newProject.id ? newProject : p,
