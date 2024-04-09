@@ -14,7 +14,7 @@ const length = useFormattedDistance(() => props.layout.stock.lengthM);
 </script>
 
 <template>
-  <li class="flex flex-col items-center gap-4">
+  <li class="flex flex-col items-center gap-4 shrink-0">
     <p class="text-center">
       <span class="font-bold text-nowrap">{{ layout.stock.material }}</span>
       <br />
