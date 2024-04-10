@@ -150,7 +150,6 @@ export class BoardLayouter {
   }
 
   tryAddPart(part: PartToCut): boolean {
-    if (part.material !== this.stock.data.material) return false;
     if (!isValidStock(this.stock.data, part)) return false;
 
     switch (this.config.optimize) {
@@ -270,9 +269,6 @@ export class BoardLayouter {
   }
 
   reduceStock(allStock: Rectangle<Stock>[]): BoardLayouter {
-    // const validStock = allStock.filter(
-    //   (stock) => stock.data.material === this.paddedStock.data.material,
-    // );
     const validStock = allStock.filter((stock) =>
       isValidStock(stock.data, this.paddedStock.data),
     );
