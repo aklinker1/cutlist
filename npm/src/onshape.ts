@@ -60,6 +60,7 @@ export function defineOnshapeLoader(config?: OnshapeApiConfig): OnshapeLoader {
           itemSource.wvmId,
           itemSource.elementId,
           itemSource.partId,
+          itemSource.configuration,
         );
         const material = headerIdToValue[materialHeaderId] as any;
         return {
@@ -142,10 +143,14 @@ function defineOnshapeApi(config?: OnshapeApiConfig) {
       wvmid: string,
       eid: string,
       partid: string,
-    ) =>
-      fetch<Onshape.BoundingBox>(
-        `/parts/d/${did}/${wvm}/${wvmid}/e/${eid}/partid/${partid}/boundingboxes`,
-      ),
+      configuration: string | undefined,
+    ) => {
+      let url = `/parts/d/${did}/${wvm}/${wvmid}/e/${eid}/partid/${partid}/boundingboxes`;
+      if (configuration) {
+        url += `?configuration=${encodeURIComponent(configuration)}`;
+      }
+      return fetch<Onshape.BoundingBox>(url);
+    },
   };
 }
 
@@ -181,6 +186,8 @@ namespace Onshape {
         partId: string;
         wvmType: string;
         wvmId: string;
+        configuration: string;
+        fullConfiguration?: string;
       };
       headerIdToValue: Record<string, unknown>;
     }>;

@@ -11,7 +11,6 @@ const extraSpace = useExtraSpaceSetting();
 watch(distanceUnit, (newUnit, oldUnit) => {
   if (!newUnit || !oldUnit) return;
 
-  console.log(newUnit, oldUnit);
   const convertValue = (value: Ref<string | number>) => {
     const dist = new Distance(value.value + oldUnit);
     value.value = dist[newUnit];

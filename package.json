@@ -5,7 +5,7 @@
     "web"
   ],
   "scripts": {
-    "dev": "bun --cwd web dev",
+    "dev": "bun run build && bun --cwd web dev",
     "build": "bun --cwd npm build",
     "check": "bun --cwd npm check && bun --cwd web check",
     "prepare": "simple-git-hooks"

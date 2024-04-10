@@ -142,10 +142,6 @@ export class BoardLayouter {
     readonly config: Config,
   ) {
     const padding = -new Distance(config.extraSpace).m;
-    console.log('PADDING', padding, {
-      a: stock,
-      b: stock.pad({ right: padding, top: padding }),
-    });
     this.paddedStock = stock.pad({ right: padding, top: padding });
   }
 
