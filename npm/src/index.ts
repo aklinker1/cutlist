@@ -7,7 +7,7 @@ import {
   type BoardLayoutLeftover,
 } from './types';
 import consola from 'consola';
-import { BoardLayouter, Rectangle } from './geometry';
+import { BoardLayouter, Rectangle, isValidStock } from './geometry';
 import { Distance } from './units';
 
 export * from './types';
@@ -40,6 +40,18 @@ export function generateBoardLayouts(
   // Generate the layouts
   const partQueue = [...parts].sort(
     (a, b) => b.size.width * b.size.length - b.size.width * a.size.length,
+    // // Sort by material, thickness, and area to ensure parts of the same
+    // // material and thickness are placed together, and that larger items are
+    // // placed first.
+    // (a, b) => {
+    //   const materialCompare = a.material.localeCompare(b.material);
+    //   if (materialCompare != 0) return materialCompare;
+
+    //   const thicknessCompare = b.size.thickness - a.size.thickness;
+    //   if (Math.abs(thicknessCompare) > 1e-5) return thicknessCompare;
+
+    //   return b.size.width * b.size.length - a.size.width * a.size.length;
+    // },
   );
   const leftovers: PartToCut[] = [];
   const layouts: BoardLayouter[] = [];
@@ -53,8 +65,13 @@ export function generateBoardLayouts(
     const matchingStock = boards.find(
       (stock) => stock.data.material === part.material,
     );
+    // const matchingStock = boards.find((stock) =>
+    //   isValidStock(stock.data, part),
+    // );
     if (matchingStock == null) {
-      consola.warn('Not stock found for ' + part.material);
+      consola.warn(
+        `Not stock found for ${part.material} @ ${part.size.thickness}`,
+      );
       leftovers.push(part);
       continue;
     }
