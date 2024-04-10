@@ -68,9 +68,9 @@ export class Rectangle<TData> {
   }): Rectangle<TData> {
     // Adjust x, y, width, and height according to padding
     const x = this.x - (padding.left ?? 0);
-    const y = this.y - (padding.top ?? 0);
+    const y = this.y - (padding.bottom ?? 0);
     const width = this.width + (padding.left ?? 0) + (padding.right ?? 0);
-    const height = this.height + (padding.top ?? 0) + (padding.bottom ?? 0);
+    const height = this.height + (padding.bottom ?? 0) + (padding.top ?? 0);
 
     return new Rectangle(this.data, x, y, width, height);
   }
@@ -142,6 +142,10 @@ export class BoardLayouter {
     readonly config: Config,
   ) {
     const padding = -new Distance(config.extraSpace).m;
+    console.log('PADDING', padding, {
+      a: stock,
+      b: stock.pad({ right: padding, top: padding }),
+    });
     this.paddedStock = stock.pad({ right: padding, top: padding });
   }
 

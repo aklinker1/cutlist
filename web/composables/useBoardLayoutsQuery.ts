@@ -16,6 +16,8 @@ export default function () {
   const layouts = computed(() => {
     const parts = partsQuery.data.value;
     if (parts == null) return undefined;
+
+    console.log(toRaw(config.value));
     return generateBoardLayouts(parts, stock.value, config.value);
   });
 
