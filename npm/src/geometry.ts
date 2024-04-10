@@ -151,7 +151,7 @@ export class BoardLayouter {
 
   tryAddPart(part: PartToCut): boolean {
     if (part.material !== this.stock.data.material) return false;
-    // if (!isValidStock(this.stock.data, part)) return false;
+    if (!isValidStock(this.stock.data, part)) return false;
 
     switch (this.config.optimize) {
       case 'space':
@@ -270,12 +270,12 @@ export class BoardLayouter {
   }
 
   reduceStock(allStock: Rectangle<Stock>[]): BoardLayouter {
-    const validStock = allStock.filter(
-      (stock) => stock.data.material === this.paddedStock.data.material,
-    );
-    // const validStock = allStock.filter((stock) =>
-    //   isValidStock(stock.data, this.paddedStock.data),
+    // const validStock = allStock.filter(
+    //   (stock) => stock.data.material === this.paddedStock.data.material,
     // );
+    const validStock = allStock.filter((stock) =>
+      isValidStock(stock.data, this.paddedStock.data),
+    );
     const validLayouts = validStock
       .map((stock) => {
         const layout = new BoardLayouter(stock, this.config);
@@ -317,17 +317,10 @@ export class BoardLayouter {
 }
 
 export function isValidStock(test: Stock, target: PartToCut | Stock) {
-  return test.material === target.material;
-  // const targetThickness =
-  //   'size' in target ? target.size.thickness : target.thickness;
-  // const res =
-  //   test.material === target.material &&
-  //   Math.abs(targetThickness - test.thickness) < 1e-5;
-  // console.log('Is valid?', res, {
-  //   at: targetThickness,
-  //   bt: test.thickness,
-  //   am: target.material,
-  //   bm: test.material,
-  // });
-  // return res;
+  const targetThickness =
+    'size' in target ? target.size.thickness : target.thickness;
+  return (
+    Math.abs(targetThickness - test.thickness) < 1e-5 &&
+    test.material === target.material
+  );
 }

@@ -62,12 +62,12 @@ export function generateBoardLayouts(
       continue;
     }
 
-    const matchingStock = boards.find(
-      (stock) => stock.data.material === part.material,
-    );
-    // const matchingStock = boards.find((stock) =>
-    //   isValidStock(stock.data, part),
+    // const matchingStock = boards.find(
+    //   (stock) => stock.data.material === part.material,
     // );
+    const matchingStock = boards.find((stock) =>
+      isValidStock(stock.data, part),
+    );
     if (matchingStock == null) {
       consola.warn(
         `Not stock found for ${part.material} @ ${part.size.thickness}`,
