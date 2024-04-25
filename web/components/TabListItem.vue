@@ -14,7 +14,7 @@ const route = useRoute();
 
 <template>
   <li
-    class="bg-gray-100 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-800"
+    class="bg-gray-100 dark:bg-gray-900 border-r border-gray-300 dark:border-gray-800 shrink-0"
   >
     <ULink
       class="px-3 flex shrink-0 h-12 justify-between items-center gap-3"
