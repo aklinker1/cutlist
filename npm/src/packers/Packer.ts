@@ -29,10 +29,6 @@ export interface PackResult<T> {
    */
   placements: Rectangle<T>[];
   /**
-   * If the packer supports it, this is the list of cuts required to cut all the rectangles from the part.
-   */
-  cuts?: Rectangle<undefined>;
-  /**
    * Any rectangles that didn't fit are returned here. Their positions are left untouched.
    */
   leftovers: T[];

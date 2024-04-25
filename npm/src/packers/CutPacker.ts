@@ -1,5 +1,4 @@
 import { Rectangle, isNearlyEqual } from '../geometry';
-import { HashSet } from '../utils/HashSet';
 import type { Visualizer } from '../visualizers';
 import type { PackOptions, PackResult, Packer } from './Packer';
 import { createTightPacker } from './TightPacker';

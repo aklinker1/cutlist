@@ -25,7 +25,6 @@ describe('Tight Bin Packer', () => {
     };
 
     expect(packer.pack(bin, rects, options)).toEqual({
-      cuts: undefined,
       placements: [
         expect.objectContaining({
           data: '1',
@@ -70,7 +69,6 @@ describe('Tight Bin Packer', () => {
     };
 
     expect(packer.pack(bin, rects, options)).toEqual({
-      cuts: undefined,
       placements: [
         expect.objectContaining({
           data: '1',
@@ -104,7 +102,6 @@ describe('Tight Bin Packer', () => {
     };
 
     expect(packer.pack(bin, rects, options)).toEqual({
-      cuts: undefined,
       placements: [
         expect.objectContaining({
           data: '1',

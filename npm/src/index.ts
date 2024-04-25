@@ -12,7 +12,6 @@ import { Rectangle } from './geometry';
 import { isValidStock } from './utils/stock-utils';
 import { Distance } from './utils/units';
 import { createCutPacker, createTightPacker, type Packer } from './packers';
-import { HashSet } from './utils/HashSet';
 import type { Visualizer } from './visualizers';
 
 export * from './types';
