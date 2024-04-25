@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { version } from '~~/package.json';
+
 const createNewProject = useCreateNewProject();
 
 const projects = useProjects();
@@ -47,14 +49,21 @@ const deleteProject = useDeleteProject();
           </li>
           <li class="text-center pt-16 opacity-50">
             <ULink
-              class="underline"
+              class="hover:underline"
+              to="https://github.com/aklinker1/cutlist/tags"
+              target="blank"
+              >v{{ version }}</ULink
+            >
+            &ensp;&bull;&ensp;
+            <ULink
+              class="hover:underline"
               to="https://github.com/aklinker1/cutlist"
               target="blank"
               >GitHub</ULink
             >
             &ensp;&bull;&ensp;
             <ULink
-              class="underline"
+              class="hover:underline"
               to="https://github.com/aklinker1/cutlist/wiki"
               target="blank"
               >User Manual</ULink
