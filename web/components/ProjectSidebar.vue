@@ -57,15 +57,24 @@ const editProject = useEditProject();
     <header class="flex flex-col shrink-0">
       <div
         v-if="doc"
-        class="mx-2 mt-2 p-2 pl-3 flex gap-2 items-start print:m-0 print:p-0"
+        class="mx-2 mt-2 p-2 pl-3 flex gap-2 items-center print:m-0 print:p-0"
       >
         <div class="flex-1 page-break-after">
           <h1 class="text-lg font-medium">{{ doc.name }}</h1>
           <p class="text-sm opacity-50">
             by {{ doc.owner.name }} &bull;
-            <ULink class="underline" :to="url" target="blank"
-              >Revision {{ doc.defaultWorkspace.id.substring(0, 7) }}</ULink
+            <ULink
+              class="hover:underline inline-flex gap-1 items-center"
+              :to="url"
+              target="blank"
+              title="Open in Onshape"
             >
+              <span>{{ doc.defaultWorkspace.name }} Revision</span>
+              <UIcon
+                name="i-heroicons-arrow-top-right-on-square-16-solid"
+                class="size-4"
+              />
+            </ULink>
           </p>
           <a
             class="text-sm opacity-50 hidden print:block"
