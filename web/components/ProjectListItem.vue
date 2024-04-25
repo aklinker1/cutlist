@@ -26,7 +26,8 @@ const emit = defineEmits<{
       <UButton
         class="justify-center items-center w-12"
         color="gray"
-        icon="i-heroicons-trash"
+        icon="i-heroicons-x-mark"
+        title="Remove from list"
         @click="emit('delete', project.id)"
       />
     </UButtonGroup>
