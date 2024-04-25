@@ -74,27 +74,37 @@ describe('Cut Packer', () => {
     expect(packer.pack(bin, rects, options)).toEqual({
       placements: [
         expect.objectContaining({
-          data: '1',
+          data: '2',
           left: 0,
+          bottom: 0,
+        }),
+        expect.objectContaining({
+          data: '3',
+          left: 4,
+          bottom: 0,
+        }),
+        expect.objectContaining({
+          data: '1',
+          left: 8,
           bottom: 0,
         }),
         expect.objectContaining({
           data: '4',
-          left: 5,
+          left: 13,
           bottom: 0,
         }),
         expect.objectContaining({
           data: '5',
-          left: 0,
-          bottom: 5,
+          left: 16,
+          bottom: 0,
         }),
         expect.objectContaining({
-          data: '2',
-          left: 5,
-          bottom: 5,
+          data: '6',
+          left: 0,
+          bottom: 10,
         }),
       ],
-      leftovers: ['3'],
+      leftovers: [],
     });
   });
 });
