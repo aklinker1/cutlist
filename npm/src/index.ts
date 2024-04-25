@@ -102,6 +102,7 @@ function placeAllParts(
   stock: Stock[],
   packer: Packer<PartToCut>,
 ): { layouts: PotentialBoardLayout[]; leftovers: PartToCut[] } {
+  const extraSpace = new Distance(config.extraSpace).m;
   const unplacedParts = new Set(
     [...parts].sort(
       // Sort by material, thickness, and area to ensure parts of the same
@@ -138,11 +139,18 @@ function placeAllParts(
       continue;
     }
 
-    const boardRect = new Rectangle(board, 0, 0, board.width, board.length);
     const layout: PotentialBoardLayout = {
       placements: [],
       stock: board,
     };
+    const boardRect = new Rectangle(
+      board,
+      0,
+      0,
+      board.width - extraSpace,
+      board.length - extraSpace,
+    );
+    console.log({ boardRect, board, extraSpace });
 
     // Fill the bin
     const partsToPlace = unplacedPartsArray
@@ -183,6 +191,8 @@ function minimizeLayoutStock(
   stock: Stock[],
   packer: Packer<PartToCut>,
 ): PotentialBoardLayout {
+  const extraSpace = new Distance(config.extraSpace).m;
+
   // Get alternative stock, smaller areas first.
   const altStock = stock
     .filter((stock) =>
@@ -195,8 +205,8 @@ function minimizeLayoutStock(
       smallerStock,
       0,
       0,
-      smallerStock.width,
-      smallerStock.length,
+      smallerStock.width - extraSpace,
+      smallerStock.length - extraSpace,
     );
     const rects = [...originalLayout.placements];
     const res = packer.pack(bin, rects, getPackerOptions(config));
