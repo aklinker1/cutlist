@@ -2,15 +2,6 @@
 import { version } from '~~/package.json';
 
 const createNewProject = useCreateNewProject();
-
-const projects = useProjects();
-const filter = ref('');
-const filteredProjects = useArrayFilter(projects, (p) =>
-  p.name.toLowerCase().includes(filter.value.toLowerCase()),
-);
-
-const openProject = useOpenProject();
-const deleteProject = useDeleteProject();
 </script>
 
 <template>
@@ -28,25 +19,7 @@ const deleteProject = useDeleteProject();
         >
       </div>
       <ClientOnly>
-        <ul class="flex flex-col gap-2">
-          <li v-if="projects.length">
-            <UInput
-              v-model="filter"
-              placeholder="Filter projects..."
-              icon="i-heroicons-magnifying-glass"
-            />
-          </li>
-          <ProjectListItem
-            v-for="project of filteredProjects"
-            :key="project.id"
-            :project
-            @open="openProject"
-            @delete="deleteProject"
-          />
-          <li v-if="filteredProjects.length === 0" class="text-center py-16">
-            No projects,
-            <ULink variant="link" @click="createNewProject">add one</ULink>
-          </li>
+        <ProjectList>
           <li class="text-center pt-16 opacity-50">
             <ULink
               class="hover:underline"
@@ -69,7 +42,7 @@ const deleteProject = useDeleteProject();
               >User Manual</ULink
             >
           </li>
-        </ul>
+        </ProjectList>
       </ClientOnly>
     </div>
   </div>

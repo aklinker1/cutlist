@@ -18,23 +18,30 @@ const closeTab = useCloseTab();
 
 <template>
   <div class="fixed inset-0 flex flex-col">
-    <TabList class="shrink-0">
+    <ul class="shrink-0 flex">
       <!-- Home Link -->
       <TabListItem to="/" hide-close class="sticky left-0">
-        <UIcon name="i-heroicons-home-solid" class="w-6" />
+        <UIcon name="i-heroicons-home-solid" class="size-4" />
       </TabListItem>
 
-      <!-- Projects -->
+      <TabList class="flex-1">
+        <!-- Projects -->
+        <ClientOnly>
+          <TabListItem
+            v-for="tab in tabs"
+            :key="tab.id"
+            :name="tab.name"
+            :to="tab.to"
+            @close="closeTab(tab.id)"
+          />
+        </ClientOnly>
+      </TabList>
+
+      <!-- Account -->
       <ClientOnly>
-        <TabListItem
-          v-for="tab in tabs"
-          :key="tab.id"
-          :name="tab.name"
-          :to="tab.to"
-          @close="closeTab(tab.id)"
-        />
+        <ProfileTab />
       </ClientOnly>
-    </TabList>
+    </ul>
     <div class="flex-1 relative">
       <div class="absolute inset-0 overflow-hidden">
         <slot />
