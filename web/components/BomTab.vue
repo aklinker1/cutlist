@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import type { BoardLayoutLeftover } from '@aklinker1/cutlist';
 
-const { data: doc } = useDocumentQuery();
+const url = useAssemblyUrl();
+const { data: doc } = useDocumentQuery(url);
 const { data, isLoading } = useBoardLayoutsQuery();
 const distanceUnit = useDistanceUnit();
 const formatDistance = useFormatDistance();

@@ -5,7 +5,7 @@ const isExpanded = useIsExpanded();
 <template>
   <div class="absolute inset-0 flex bg-white dark:bg-gray-900 print:block">
     <ClientOnly>
-      <MainSidebar
+      <ProjectSidebar
         v-if="!isExpanded"
         class="bg-gray-50 dark:bg-gray-800 shrink-0 min-w-[28rem] relative z-10"
       />

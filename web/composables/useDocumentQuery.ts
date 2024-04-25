@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/vue-query';
 import useOnshapeUrl from './useOnshapeUrl';
 
-export default function () {
+export default function (url: MaybeRefOrGetter<string | undefined>) {
   const onshape = useOnshapeLoader();
-
-  const url = useAssemblyUrl();
-  const onshapeUrl = useOnshapeUrl(url);
+  const onshapeUrl = useOnshapeUrl(() => toValue(url) ?? '');
 
   return useQuery({
     queryKey: ['onshape', 'document', computed(() => toValue(url))],
     queryFn: async () => {
-      if (onshapeUrl.value == null) return undefined;
+      if (onshapeUrl.value == null)
+        throw Error('Invalid onshape assembly URL: ' + toValue(url));
       return await onshape.getDocument(onshapeUrl.value.did);
     },
   });
