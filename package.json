@@ -6,6 +6,8 @@
   ],
   "scripts": {
     "dev": "bun run build && bun --cwd web dev",
+    "test": "bun --cwd npm test",
+    "test:watch": "bun --cwd npm test:watch",
     "build": "bun --cwd npm build",
     "check": "bun --cwd npm check && bun --cwd web check",
     "prepare": "simple-git-hooks"

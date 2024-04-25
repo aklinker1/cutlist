@@ -17,7 +17,7 @@ export default function () {
     const parts = partsQuery.data.value;
     if (parts == null) return undefined;
 
-    return generateBoardLayouts(parts, stock.value, config.value);
+    return generateBoardLayouts(toRaw(parts), stock.value, config.value);
   });
 
   return {

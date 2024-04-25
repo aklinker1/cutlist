@@ -84,6 +84,7 @@ export const Config = z.object({
    * Extra padding to add to the top and right sides of the boards/stock.
    */
   extraSpace: Distance.default('0'),
+  precision: z.number().default(1e-5),
 });
 export type Config = z.infer<typeof Config>;
 
@@ -110,8 +111,6 @@ export interface BoardLayoutLeftover {
 }
 
 export interface BoardLayoutPlacement extends BoardLayoutLeftover {
-  xM: number;
-  yM: number;
   leftM: number;
   rightM: number;
   topM: number;

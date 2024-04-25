@@ -4,6 +4,9 @@ import { resolve } from 'node:path';
 export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@vueuse/nuxt'],
   ssr: true, // SSG
+  alias: {
+    '@aklinker1/cutlist': resolve('../npm/src'),
+  },
   runtimeConfig: {
     onshape: {
       accessKey: '',
@@ -15,7 +18,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Onshape Cutlist Generator',
+      title: 'Cutlist Generator',
       htmlAttrs: {
         lang: 'en',
       },

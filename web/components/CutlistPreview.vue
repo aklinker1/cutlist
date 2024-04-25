@@ -9,7 +9,7 @@ const { scale, resetZoom, zoomIn, zoomOut } = usePanZoom(container);
   <div>
     <!-- Cutlist Preview -->
     <div
-      class="absolute inset-0 overflow-none border-t-4 border-gray-300 dark:border-gray-800"
+      class="absolute inset-0 overflow-none border-t-4 border-gray-300 dark:border-gray-800 flex"
     >
       <p v-if="error" class="m-auto">{{ error }}</p>
 
