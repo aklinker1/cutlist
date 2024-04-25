@@ -24,7 +24,7 @@ const deleteProject = useDeleteProject();
           class="shrink-0"
           icon="i-heroicons-plus"
           @click="createNewProject"
-          >New</UButton
+          >Import</UButton
         >
       </div>
       <ClientOnly>
