@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { Rectangle } from './geometry';
 
 /**
  * A number in meters or a string with unit suffix ("1in").
@@ -88,6 +89,9 @@ export const Config = z.object({
 });
 export type Config = z.infer<typeof Config>;
 
+/**
+ * JSON friendly object containing boards and part placements.
+ */
 export interface BoardLayout {
   stock: BoardLayoutStock;
   placements: BoardLayoutPlacement[];
@@ -115,4 +119,14 @@ export interface BoardLayoutPlacement extends BoardLayoutLeftover {
   rightM: number;
   topM: number;
   bottomM: number;
+}
+
+/**
+ * Intermediate type for storing the board layout with the rectangle class. Not
+ * JSON friendly. This gets converted into `BoardLayout`, which doesn't contain
+ * any classes, and is save to convert to and from JSON.
+ */
+export interface PotentialBoardLayout {
+  stock: Stock;
+  placements: Rectangle<PartToCut>[];
 }

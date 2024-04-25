@@ -6,12 +6,18 @@ import {
   type BoardLayout,
   type BoardLayoutLeftover,
   type BoardLayoutPlacement,
+  type PotentialBoardLayout,
 } from './types';
 import consola from 'consola';
 import { Rectangle } from './geometry';
 import { isValidStock } from './utils/stock-utils';
 import { Distance } from './utils/units';
-import { createCutPacker, createTightPacker, type Packer } from './packers';
+import {
+  createCutPacker,
+  createTightPacker,
+  type PackOptions,
+  type Packer,
+} from './packers';
 import type { Visualizer } from './visualizers';
 
 export * from './types';
@@ -46,26 +52,21 @@ export function generateBoardLayouts(
 } {
   config = Config.parse(config);
   consola.info('Generating board layouts...');
+  const packer = PACKERS[config.optimize](visualizer);
 
   const boards = reduceStockMatrix(stock).toSorted(
     (a, b) => b.width * b.length - a.width * a.length,
   );
   if (boards.length === 0) throw Error('You must include at least 1 stock.');
 
-  const { layouts, leftovers } = placeAllParts(
-    config,
-    parts,
-    boards,
-    visualizer,
-  );
-
+  const { layouts, leftovers } = placeAllParts(config, parts, boards, packer);
   const minimizedLayouts = layouts.map((layout) =>
-    minimizeLayout(config, layout, boards),
+    minimizeLayoutStock(config, layout, boards, packer),
   );
 
   return {
-    layouts: minimizedLayouts,
-    leftovers,
+    layouts: minimizedLayouts.map(serializeBoardLayoutRectangles),
+    leftovers: leftovers.map(serializePartToCut),
   };
 }
 
@@ -95,46 +96,12 @@ export const PACKERS: Record<
   space: createTightPacker,
 };
 
-function mapPlacementToBoardLayoutPlacement(
-  placement: Rectangle<PartToCut>,
-): BoardLayoutPlacement {
-  return {
-    instanceNumber: placement.data.instanceNumber,
-    partNumber: placement.data.partNumber,
-    name: placement.data.name,
-    material: placement.data.material,
-    leftM: placement.left,
-    rightM: placement.right,
-    topM: placement.top,
-    bottomM: placement.bottom,
-    lengthM: placement.height,
-    thicknessM: placement.data.size.thickness,
-    widthM: placement.width,
-  };
-}
-
-function mapPartToPlaceToBoardLayoutLeftover(
-  part: PartToCut,
-): BoardLayoutLeftover {
-  return {
-    instanceNumber: part.instanceNumber,
-    partNumber: part.partNumber,
-    name: part.name,
-    material: part.material,
-    lengthM: part.size.length,
-    widthM: part.size.width,
-    thicknessM: part.size.thickness,
-  };
-}
-
 function placeAllParts(
   config: Config,
   parts: PartToCut[],
   stock: Stock[],
-  visualizer?: Visualizer,
-): { layouts: BoardLayout[]; leftovers: BoardLayoutLeftover[] } {
-  const packer = PACKERS[config.optimize](visualizer);
-
+  packer: Packer<PartToCut>,
+): { layouts: PotentialBoardLayout[]; leftovers: PartToCut[] } {
   const unplacedParts = new Set(
     [...parts].sort(
       // Sort by material, thickness, and area to ensure parts of the same
@@ -152,7 +119,7 @@ function placeAllParts(
     ),
   );
   const leftovers: PartToCut[] = [];
-  const layouts: BoardLayout[] = [];
+  const layouts: PotentialBoardLayout[] = [];
 
   while (unplacedParts.size > 0) {
     // Extract all parts from queue, will add them back if not placed
@@ -172,14 +139,9 @@ function placeAllParts(
     }
 
     const boardRect = new Rectangle(board, 0, 0, board.width, board.length);
-    const layout: BoardLayout = {
+    const layout: PotentialBoardLayout = {
       placements: [],
-      stock: {
-        lengthM: board.length,
-        material: board.material,
-        thicknessM: board.thickness,
-        widthM: board.width,
-      },
+      stock: board,
     };
 
     // Fill the bin
@@ -190,15 +152,11 @@ function placeAllParts(
       );
 
     // Fill the layout
-    const res = packer.pack(boardRect, partsToPlace, {
-      allowRotations: true,
-      gap: new Distance(config.bladeWidth).m,
-      precision: config.precision,
-    });
+    const res = packer.pack(boardRect, partsToPlace, getPackerOptions(config));
     if (res.placements.length > 0) {
       layouts.push(layout);
       res.placements.forEach((placement) => {
-        layout.placements.push(mapPlacementToBoardLayoutPlacement(placement));
+        layout.placements.push(placement);
         unplacedParts.delete(placement.data);
       });
     } else {
@@ -211,15 +169,97 @@ function placeAllParts(
 
   return {
     layouts,
-    leftovers: leftovers.map(mapPartToPlaceToBoardLayoutLeftover),
+    leftovers,
   };
 }
 
-function minimizeLayout(
+/**
+ * Given a layout, return a new layout on a smaller peice of stock, if
+ * possible. If a smaller stock cannot be found, return the same layout.
+ */
+function minimizeLayoutStock(
   config: Config,
-  layout: BoardLayout,
+  originalLayout: PotentialBoardLayout,
   stock: Stock[],
+  packer: Packer<PartToCut>,
+): PotentialBoardLayout {
+  // Get alternative stock, smaller areas first.
+  const altStock = stock
+    .filter((stock) =>
+      isValidStock(originalLayout.stock, stock, config.precision),
+    )
+    .toSorted((a, b) => a.width * a.length - b.width * b.length);
+
+  for (const smallerStock of altStock) {
+    const bin = new Rectangle(
+      smallerStock,
+      0,
+      0,
+      smallerStock.width,
+      smallerStock.length,
+    );
+    const rects = [...originalLayout.placements];
+    const res = packer.pack(bin, rects, getPackerOptions(config));
+
+    // Return the new layout if there are no leftovers
+    if (res.leftovers.length === 0)
+      return {
+        stock: smallerStock,
+        placements: res.placements,
+      };
+  }
+
+  return originalLayout;
+}
+
+function getPackerOptions(config: Config): PackOptions {
+  return {
+    allowRotations: true,
+    gap: new Distance(config.bladeWidth).m,
+    precision: config.precision,
+  };
+}
+
+function serializeBoardLayoutRectangles(
+  layout: PotentialBoardLayout,
 ): BoardLayout {
-  consola.warn('TODO: Minimize layouts');
-  return layout;
+  return {
+    placements: layout.placements.map(serializePartToCutPlacement),
+    stock: {
+      material: layout.stock.material,
+      thicknessM: layout.stock.thickness,
+      widthM: layout.stock.width,
+      lengthM: layout.stock.length,
+    },
+  };
+}
+
+function serializePartToCutPlacement(
+  placement: Rectangle<PartToCut>,
+): BoardLayoutPlacement {
+  return {
+    instanceNumber: placement.data.instanceNumber,
+    partNumber: placement.data.partNumber,
+    name: placement.data.name,
+    material: placement.data.material,
+    leftM: placement.left,
+    rightM: placement.right,
+    topM: placement.top,
+    bottomM: placement.bottom,
+    lengthM: placement.height,
+    thicknessM: placement.data.size.thickness,
+    widthM: placement.width,
+  };
+}
+
+function serializePartToCut(part: PartToCut): BoardLayoutLeftover {
+  return {
+    instanceNumber: part.instanceNumber,
+    partNumber: part.partNumber,
+    name: part.name,
+    material: part.material,
+    lengthM: part.size.length,
+    widthM: part.size.width,
+    thicknessM: part.size.thickness,
+  };
 }
