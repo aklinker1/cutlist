@@ -150,7 +150,6 @@ function placeAllParts(
       board.width - extraSpace,
       board.length - extraSpace,
     );
-    console.log({ boardRect, board, extraSpace });
 
     // Fill the bin
     const partsToPlace = unplacedPartsArray
