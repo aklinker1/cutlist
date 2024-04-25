@@ -14,7 +14,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@aklinker1/cutlist": "workspace:*",
     "@tanstack/vue-query": "^5.28.4",
     "js-yaml": "^4.1.0"
   },

@@ -37,6 +37,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "check": "check -b ../node_modules/.bin",
+    "test": "bun test",
+    "test:watch": "bun test --watch",
     "dev": "bun test --watch",
     "build": "bun build.ts",
     "prepare": "bun run build"

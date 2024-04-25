@@ -9,5 +9,6 @@ export default createSharedComposable(() => {
     bladeWidth: bladeWidth.value,
     optimize: optimize.value,
     extraSpace: extraSpace.value,
+    precision: 1e-5,
   }));
 });
