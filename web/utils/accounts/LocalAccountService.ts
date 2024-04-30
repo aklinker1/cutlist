@@ -6,14 +6,23 @@ import {
 } from './AccountService';
 
 export function createLocalAccountService(): AccountService {
-  const settingsStorageKeys: Record<keyof AccountSettings, string> = {
+  const _settingsStorageKeys: Record<keyof AccountSettings, string> = {
     bladeWidth: '@cutlist/blade-width',
     distanceUnit: '@cutlist/distance-unit',
     extraSpace: '@cutlist/extra-space',
     optimize: '@cutlist/optimize',
     showPartNumbers: '@cutlist/use-part-numbers',
+    stock: '@cutlist/stock',
   };
   const projectsStorageKey = '@cutlist/projects';
+
+  const getKey = <T extends keyof AccountSettings>(
+    key: T,
+    projectId: string | undefined,
+  ) => {
+    if (projectId == null) return _settingsStorageKeys[key];
+    return `${_settingsStorageKeys[key]}?id=${projectId}`;
+  };
 
   const parseNumber = (str: string | null): number | undefined => {
     const v = Number(str ?? undefined);
@@ -25,30 +34,33 @@ export function createLocalAccountService(): AccountService {
     return str === 'true';
   };
 
-  const getSettings = (): AccountSettings => {
+  const getSettings = (projectId: string | undefined): AccountSettings => {
     const settings: Partial<AccountSettings> = {};
 
     const bladeWidth = parseNumber(
-      localStorage.getItem(settingsStorageKeys.bladeWidth),
+      localStorage.getItem(getKey('bladeWidth', projectId)),
     );
     if (bladeWidth != null) settings.bladeWidth = bladeWidth;
 
     const extraSpace = parseNumber(
-      localStorage.getItem(settingsStorageKeys.extraSpace),
+      localStorage.getItem(getKey('extraSpace', projectId)),
     );
     if (extraSpace != null) settings.extraSpace = extraSpace;
 
-    const optimize = localStorage.getItem(settingsStorageKeys.optimize);
+    const optimize = localStorage.getItem(getKey('optimize', projectId));
     if (optimize != null)
       settings.optimize = optimize as AccountSettings['optimize'];
 
     const showPartNumbers = parseBoolean(
-      localStorage.getItem(settingsStorageKeys.showPartNumbers),
+      localStorage.getItem(getKey('showPartNumbers', projectId)),
     );
     if (showPartNumbers != null) settings.showPartNumbers = showPartNumbers;
 
-    const distanceUnit = localStorage.getItem(settingsStorageKeys.distanceUnit);
-    if (distanceUnit != null) settings.distanceUnit = distanceUnit;
+    const distanceUnit = localStorage.getItem(
+      getKey('distanceUnit', projectId),
+    );
+    if (distanceUnit != null)
+      settings.distanceUnit = distanceUnit as AccountSettings['distanceUnit'];
 
     return {
       ...DEFAULT_SETTINGS,
@@ -66,17 +78,23 @@ export function createLocalAccountService(): AccountService {
 
   return {
     id: 'local',
-    async getSettings() {
-      return getSettings();
+    async getSettings(projectId) {
+      return getSettings(projectId);
     },
-    async setSettings(changes) {
+    async setSettings(projectId, changes) {
       Object.entries(changes).forEach(([key, value]) => {
-        const localStorageKey =
-          settingsStorageKeys[key as keyof AccountSettings];
+        const localStorageKey = getKey(key as keyof AccountSettings, projectId);
         if (!localStorageKey) return;
 
         localStorage.setItem(localStorageKey, String(value));
       });
+    },
+    async deleteSettings(projectId) {
+      Object.keys(_settingsStorageKeys).forEach((key) =>
+        localStorage.removeItem(
+          getKey(key as keyof AccountSettings, projectId),
+        ),
+      );
     },
     async listProjects() {
       return listProjects();

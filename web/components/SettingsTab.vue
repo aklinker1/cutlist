@@ -1,33 +1,55 @@
 <script lang="ts" setup>
 import { Distance } from '@aklinker1/cutlist';
 
-const optimize = useOptimizeForSetting();
-const bladeWidth = useBladeWidthSetting();
-const distanceUnit = useDistanceUnit();
-const showPartNumbers = useShowPartNumbers();
-const extraSpace = useExtraSpaceSetting();
+const {
+  bladeWidth,
+  distanceUnit,
+  extraSpace,
+  optimize,
+  showPartNumbers,
+  isLoading,
+  changes,
+  resetSettings: resetLocal,
+} = useProjectSettings();
 
 // Convert values when units change
 watch(distanceUnit, (newUnit, oldUnit) => {
   if (!newUnit || !oldUnit) return;
 
-  const convertValue = (value: Ref<string | number>) => {
+  const convertDistance = (value: Ref<string | number | undefined>) => {
+    if (value.value == null) return;
     const dist = new Distance(value.value + oldUnit);
     value.value = dist[newUnit];
   };
-  convertValue(bladeWidth);
-  convertValue(extraSpace);
+  convertDistance(bladeWidth);
+  convertDistance(extraSpace);
 });
+
+const projectId = useProjectId();
+const { mutate: _save, isPending: isSaving } = useSetSettingsMutation();
+function save() {
+  _save({
+    projectId: projectId.value,
+    changes: toRaw(changes.value),
+  });
+}
+
+const { mutate: _reset, isPending: isResetting } = useDeleteSettingsMutation();
+function reset() {
+  _reset(projectId.value, {
+    onSettled: () => resetLocal(),
+  });
+}
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <form v-if="!isLoading" class="flex flex-col gap-4" @submit.prevent="save">
     <UFormGroup label="Distance unit">
       <USelect v-model="distanceUnit" :options="['in', 'm', 'mm']" />
     </UFormGroup>
 
     <UFormGroup :label="`Blade width (${distanceUnit}):`">
-      <UInput v-model="bladeWidth" type="number" />
+      <UInput v-model="bladeWidth" type="number" min="0" step="0.00001" />
     </UFormGroup>
 
     <UFormGroup :label="`Extra space (${distanceUnit}):`">
@@ -40,8 +62,11 @@ watch(distanceUnit, (newUnit, oldUnit) => {
 
     <UCheckbox v-model="showPartNumbers" label="Show part numbers in preview" />
 
-    <p class="text-sm opacity-50 text-center pt-8">
-      Settings are saved when returning to the website.
-    </p>
-  </div>
+    <div class="flex flex-row-reverse gap-4">
+      <UButton type="submit" :loading="isSaving">Save Changes</UButton>
+      <UButton color="gray" :loading="isResetting" @click="reset"
+        >Reset</UButton
+      >
+    </div>
+  </form>
 </template>

@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import type { HorizontalNavigationLink } from '#ui/types';
 
-const url = useAssemblyUrl();
-const { data: doc } = useDocumentQuery();
-const { isFetching: isFetchingLayouts } = useBoardLayoutsQuery();
-const { data: boardLayouts } = useBoardLayoutsQuery();
+const { data: boardLayouts, isFetching: isFetchingLayouts } =
+  useBoardLayoutsQuery();
 const refresh = useRefreshOnshapeQueries();
 
 const warningsBadge = computed(() => {
@@ -21,10 +19,10 @@ const links = computed<HorizontalNavigationLink[]>(() => [
     click: () => void (tab.value = 'bom'),
   },
   {
-    label: 'Stock',
-    icon: 'i-heroicons-truck',
-    active: tab.value === 'stock',
-    click: () => void (tab.value = 'stock'),
+    label: 'Boards',
+    icon: 'i-fluent-emoji-high-contrast-wood',
+    active: tab.value === 'boards',
+    click: () => void (tab.value = 'boards'),
   },
   {
     label: 'Warnings',
@@ -92,7 +90,7 @@ const editProject = useEditProject();
     <div class="relative flex-1">
       <div class="absolute inset-0 overflow-auto">
         <BomTab v-if="tab === 'bom'" />
-        <StockTab v-else-if="tab === 'stock'" />
+        <StockTab v-else-if="tab === 'boards'" />
         <WarningsTab v-else-if="tab === 'warnings'" class="p-8" />
         <SettingsTab v-else-if="tab === 'settings'" class="p-8" />
       </div>
