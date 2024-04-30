@@ -4,7 +4,7 @@ import type { BoardLayoutLeftover } from '@aklinker1/cutlist';
 const url = useAssemblyUrl();
 const { data: doc } = useDocumentQuery(url);
 const { data, isLoading } = useBoardLayoutsQuery();
-const distanceUnit = useDistanceUnit();
+const { distanceUnit } = useProjectSettings();
 const formatDistance = useFormatDistance();
 
 const rows = computed(() => {

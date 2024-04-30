@@ -21,7 +21,7 @@ const fontSize = usePx(() =>
   ),
 );
 
-const showPartNumbers = useShowPartNumbers();
+const { showPartNumbers } = useProjectSettings();
 </script>
 
 <template>

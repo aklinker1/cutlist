@@ -21,7 +21,7 @@ const closeTab = useCloseTab();
     <ul class="shrink-0 flex">
       <!-- Home Link -->
       <TabListItem to="/" hide-close class="sticky left-0">
-        <UIcon name="i-heroicons-home-solid" class="size-4" />
+        <UIcon name="i-heroicons-home-solid" class="h-4 w-6" />
       </TabListItem>
 
       <TabList class="flex-1">
