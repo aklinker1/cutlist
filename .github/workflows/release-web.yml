@@ -1,9 +1,6 @@
-name: Validate
+name: Release Web
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   validate:
@@ -12,6 +9,7 @@ jobs:
 
   release:
     runs-on: ubuntu-22.04
+    needs: [validate]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
