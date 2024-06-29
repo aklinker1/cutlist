@@ -9,8 +9,6 @@ Website and NPM tool for generating cutlists for an onshape assembly.
 
 ## Usage
 
-This tool only works for assemblies on the main workspace.
-
 1. Enter assembly's URL into the URL input
 2. In onshape, assign materials to all your parts
 3. Add boards to your project, using the material names you just selected
