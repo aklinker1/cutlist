@@ -33,3 +33,16 @@ To publish docker image:
 ```bash
 bun publish:web:docker
 ```
+
+## Deploy Website
+
+Bump the version. commit change, and tag:
+
+```sh
+vi web/package.json
+git commit -am "chore(release): web-v1.0.7"
+git tag web-v1.0.7
+git push
+git push --tags
+# Run: https://github.com/aklinker1/cutlist/actions/workflows/release-web.yml
+```
