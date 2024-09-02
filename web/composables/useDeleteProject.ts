@@ -1,9 +1,13 @@
-export default function () {
-  const projects = useProjects();
-  const closeTab = useCloseTab();
+import useInvalidateProjectListQuery from './useInvalidateProjectListQuery';
 
-  return (id: string) => {
+export default function () {
+  const account = useAccountService();
+  const closeTab = useCloseTab();
+  const invalidateProjectsQuery = useInvalidateProjectListQuery();
+
+  return async (id: string) => {
+    await account.value.removeProject(id);
+    await invalidateProjectsQuery();
     closeTab(id);
-    projects.value = projects.value.filter((project) => project.id !== id);
   };
 }

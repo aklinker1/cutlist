@@ -1,6 +1,7 @@
 export default function () {
   const { openDialog } = useDialogState();
-  const allProjects = useProjects();
+  const account = useAccountService();
+  const invalidateProjectsQuery = useInvalidateProjectListQuery();
 
   const openExistingProject = (project: Project) =>
     new Promise<Project>((res, rej) => {
@@ -16,8 +17,7 @@ export default function () {
     if (project == null) return;
 
     const newProject = await openExistingProject(project);
-    allProjects.value = allProjects.value.map((p) =>
-      p.id === newProject.id ? newProject : p,
-    );
+    await account.value.saveProject(newProject);
+    await invalidateProjectsQuery();
   };
 }

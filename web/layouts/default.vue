@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const openIds = useOpenProjectIds();
-const projects = useProjects();
+const { data: projects } = useProjectListQuery();
 
 const tabs = computed(() =>
   openIds.value.map((id) => {
