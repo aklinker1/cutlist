@@ -1,8 +1,8 @@
 export default function () {
   const { openDialog } = useDialogState();
   const openProjectIds = useOpenProjectIds();
-  const allProjects = useProjects();
   const router = useRouter();
+  const accountService = useAccountService();
 
   const createNewProject = () =>
     new Promise<Project>((res, rej) => {
@@ -15,7 +15,7 @@ export default function () {
 
   return async () => {
     const project = await createNewProject();
-    allProjects.value.push(project);
+    await accountService.value.saveProject(project);
     openProjectIds.value.push(project.id);
     router.push(`/p/${project.id}`);
   };
