@@ -1,6 +1,6 @@
 {
   "name": "cutlist",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "scripts": {
     "check": "check -b ../node_modules/.bin",
