@@ -22,6 +22,7 @@ import type { Visualizer } from './visualizers';
 
 export * from './types';
 export * from './utils/units';
+export * from './cuts';
 
 /**
  * Given a list of parts, stock, and some configuration, return the board
@@ -59,7 +60,13 @@ export function generateBoardLayouts(
   );
   if (boards.length === 0) throw Error('You must include at least 1 stock.');
 
-  const { layouts, leftovers } = placeAllParts(config, parts, boards, packer);
+  const { layouts: initialLayouts, leftovers } = placeAllParts(
+    config,
+    parts,
+    boards,
+    packer,
+  );
+  const layouts = tryConsolidateTail(config, initialLayouts, boards);
   const minimizedLayouts = layouts.map((layout) =>
     minimizeLayoutStock(config, layout, boards, packer),
   );
@@ -96,39 +103,171 @@ export const PACKERS: Record<
   space: createTightPacker,
 };
 
+/**
+ * After the initial greedy placement, attempt to reduce the board count by
+ * trying two strategies repeatedly until no further improvement is found:
+ *
+ * Strategy A: Take the last board's parts and try merging them into each
+ * individual earlier board by repacking (earlier board's parts + last board's
+ * parts) with TightPacker across all sort orderings.
+ *
+ * Strategy B: Repack the last k boards' parts together with TightPacker across
+ * all sort orderings (original approach, handles cases where rearranging across
+ * multiple boards helps).
+ */
+function tryConsolidateTail(
+  config: Config,
+  layouts: PotentialBoardLayout[],
+  stock: Stock[],
+): PotentialBoardLayout[] {
+  if (layouts.length <= 1) return layouts;
+
+  const tightPacker = createTightPacker<PartToCut>();
+
+  // Strategy A: try merging the last board into each earlier board
+  const lastBoard = layouts[layouts.length - 1];
+  const lastParts = lastBoard.placements.map((p) => p.data);
+  for (let i = 0; i < layouts.length - 1; i++) {
+    const targetBoard = layouts[i];
+    const targetParts = targetBoard.placements.map((p) => p.data);
+    const combinedParts = [...targetParts, ...lastParts];
+
+    for (const sortKey of SORT_KEYS) {
+      const { layouts: repacked, leftovers } = placeAllPartsWithOrdering(
+        config,
+        combinedParts,
+        [targetBoard.stock],
+        tightPacker,
+        sortKey,
+      );
+      if (leftovers.length === 0 && repacked.length === 1) {
+        const newLayouts = [
+          ...layouts.slice(0, i),
+          repacked[0],
+          ...layouts.slice(i + 1, layouts.length - 1),
+        ];
+        return tryConsolidateTail(config, newLayouts, stock);
+      }
+    }
+  }
+
+  // Strategy B: repack last k boards together
+  for (let k = 2; k <= Math.min(layouts.length, 4); k++) {
+    const headLayouts = layouts.slice(0, -k);
+    const tailParts = layouts
+      .slice(-k)
+      .flatMap((l) => l.placements.map((p) => p.data));
+
+    let bestTail: PotentialBoardLayout[] | null = null;
+    for (const sortKey of SORT_KEYS) {
+      const { layouts: tightLayouts, leftovers } = placeAllPartsWithOrdering(
+        config,
+        tailParts,
+        stock,
+        tightPacker,
+        sortKey,
+      );
+      if (
+        leftovers.length === 0 &&
+        tightLayouts.length < k &&
+        (bestTail === null || tightLayouts.length < bestTail.length)
+      ) {
+        bestTail = tightLayouts;
+      }
+    }
+
+    if (bestTail !== null) {
+      return tryConsolidateTail(config, [...headLayouts, ...bestTail], stock);
+    }
+  }
+
+  return layouts;
+}
+
+type SortKey = 'area' | 'height' | 'width' | 'perimeter';
+const SORT_KEYS: SortKey[] = ['area', 'height', 'width', 'perimeter'];
+
+function makePartComparator(
+  sortKey: SortKey,
+): (a: PartToCut, b: PartToCut) => number {
+  const secondary = (p: PartToCut): number => {
+    switch (sortKey) {
+      case 'area':
+        return p.size.width * p.size.length;
+      case 'height':
+        return p.size.length;
+      case 'width':
+        return p.size.width;
+      case 'perimeter':
+        return 2 * (p.size.width + p.size.length);
+    }
+  };
+  return (a, b) => {
+    const materialCompare = a.material.localeCompare(b.material);
+    if (materialCompare !== 0) return materialCompare;
+    const thicknessCompare = b.size.thickness - a.size.thickness;
+    if (Math.abs(thicknessCompare) > 1e-5) return thicknessCompare;
+    return secondary(b) - secondary(a);
+  };
+}
+
+function scorePlacements(result: {
+  layouts: PotentialBoardLayout[];
+  leftovers: PartToCut[];
+}): { boards: number; fillRate: number } {
+  const boards = result.layouts.length;
+  const placedArea = result.layouts
+    .flatMap((l) => l.placements)
+    .reduce((sum, p) => sum + p.width * p.height, 0);
+  const binArea = result.layouts.reduce(
+    (sum, l) => sum + l.stock.width * l.stock.length,
+    0,
+  );
+  return { boards, fillRate: binArea > 0 ? placedArea / binArea : 0 };
+}
+
 function placeAllParts(
   config: Config,
   parts: PartToCut[],
   stock: Stock[],
   packer: Packer<PartToCut>,
 ): { layouts: PotentialBoardLayout[]; leftovers: PartToCut[] } {
+  let best: { layouts: PotentialBoardLayout[]; leftovers: PartToCut[] } | null =
+    null;
+  let bestScore: { boards: number; fillRate: number } | null = null;
+
+  for (const key of SORT_KEYS) {
+    const result = placeAllPartsWithOrdering(config, parts, stock, packer, key);
+    const score = scorePlacements(result);
+    if (
+      best === null ||
+      score.boards < bestScore!.boards ||
+      (score.boards === bestScore!.boards &&
+        score.fillRate > bestScore!.fillRate)
+    ) {
+      best = result;
+      bestScore = score;
+    }
+  }
+  return best!;
+}
+
+function placeAllPartsWithOrdering(
+  config: Config,
+  parts: PartToCut[],
+  stock: Stock[],
+  packer: Packer<PartToCut>,
+  sortKey: SortKey,
+): { layouts: PotentialBoardLayout[]; leftovers: PartToCut[] } {
   const extraSpace = new Distance(config.extraSpace).m;
-  const unplacedParts = new Set(
-    [...parts].sort(
-      // Sort by material, thickness, and area to ensure parts of the same
-      // material and thickness are placed together, and that larger items are
-      // placed first.
-      (a, b) => {
-        const materialCompare = a.material.localeCompare(b.material);
-        if (materialCompare != 0) return materialCompare;
-
-        const thicknessCompare = b.size.thickness - a.size.thickness;
-        if (Math.abs(thicknessCompare) > 1e-5) return thicknessCompare;
-
-        return b.size.width * b.size.length - a.size.width * a.size.length;
-      },
-    ),
-  );
+  const unplacedParts = new Set([...parts].sort(makePartComparator(sortKey)));
   const leftovers: PartToCut[] = [];
   const layouts: PotentialBoardLayout[] = [];
 
   while (unplacedParts.size > 0) {
-    // Extract all parts from queue, will add them back if not placed
     const unplacedPartsArray = [...unplacedParts];
     const targetPart = unplacedPartsArray[0];
 
-    // Find board to put part on
-    // Add a new board if one doesn't match the part
     const board = stock.find((board) =>
       isValidStock(board, targetPart, config.precision),
     );
@@ -151,14 +290,12 @@ function placeAllParts(
       board.length - extraSpace,
     );
 
-    // Fill the bin
     const partsToPlace = unplacedPartsArray
       .filter((part) => isValidStock(board, part, config.precision))
       .map(
         (part) => new Rectangle(part, 0, 0, part.size.width, part.size.length),
       );
 
-    // Fill the layout
     const res = packer.pack(boardRect, partsToPlace, getPackerOptions(config));
     if (res.placements.length > 0) {
       layouts.push(layout);

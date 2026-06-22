@@ -4,8 +4,8 @@ import { reduceStockMatrix } from '@aklinker1/cutlist';
 const value = defineModel<string>({ required: true });
 
 const internalValue = ref(value.value);
-onMounted(() => {
-  internalValue.value = value.value;
+watch(value, (v) => {
+  internalValue.value = v;
 });
 
 const parseStock = useParseStock();

@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import type { HorizontalNavigationLink } from '#ui/types';
 
-const { data: boardLayouts, isFetching: isFetchingLayouts } =
-  useBoardLayoutsQuery();
+const {
+  data: boardLayouts,
+  isFetching: isFetchingLayouts,
+  regenerate,
+  dumpTestCase,
+} = useBoardLayoutsQuery();
 const refresh = useRefreshOnshapeQueries();
 
 const warningsBadge = computed(() => {
@@ -23,6 +27,12 @@ const links = computed<HorizontalNavigationLink[]>(() => [
     icon: 'i-fluent-emoji-high-contrast-wood',
     active: tab.value === 'boards',
     click: () => void (tab.value = 'boards'),
+  },
+  {
+    label: 'Cuts',
+    icon: 'i-heroicons-scissors',
+    active: tab.value === 'cuts',
+    click: () => void (tab.value = 'cuts'),
   },
   {
     label: 'Warnings',
@@ -70,11 +80,27 @@ const editProject = useEditProject();
         />
         <UButton
           class="print:hidden"
+          title="Regenerate layout"
+          icon="i-heroicons-sparkles"
+          color="gray"
+          size="sm"
+          @click="regenerate"
+        />
+        <UButton
+          class="print:hidden"
           title="Change Project Source"
           icon="i-heroicons-pencil"
           color="gray"
           size="sm"
           @click="editProject(project)"
+        />
+        <UButton
+          class="print:hidden"
+          title="Download test case JSON"
+          icon="i-heroicons-arrow-down-tray"
+          color="gray"
+          size="sm"
+          @click="dumpTestCase"
         />
       </div>
 
@@ -91,6 +117,7 @@ const editProject = useEditProject();
       <div class="absolute inset-0 overflow-auto">
         <BomTab v-if="tab === 'bom'" />
         <StockTab v-else-if="tab === 'boards'" />
+        <CutsTab v-else-if="tab === 'cuts'" />
         <WarningsTab v-else-if="tab === 'warnings'" class="p-8" />
         <SettingsTab v-else-if="tab === 'settings'" class="p-8" />
       </div>

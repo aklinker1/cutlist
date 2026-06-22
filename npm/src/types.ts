@@ -72,7 +72,7 @@ export const Config = z.object({
   /**
    * The blade kerf, usually around 0.125 inches.
    */
-  bladeWidth: Distance.default('0.125in'),
+  bladeWidth: Distance.default('0.25in'),
   /**
    * The optimization method when laying out the parts on the stock.
    * - `"space"`: Pack as many parts onto each peice of stock as possible

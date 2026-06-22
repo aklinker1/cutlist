@@ -7,6 +7,7 @@ const {
   extraSpace,
   optimize,
   showPartNumbers,
+  showPartNames,
   isLoading,
   changes,
   resetSettings: resetLocal,
@@ -61,6 +62,8 @@ function reset() {
     </UFormGroup>
 
     <UCheckbox v-model="showPartNumbers" label="Show part numbers in preview" />
+
+    <UCheckbox v-model="showPartNames" label="Show part names in preview" />
 
     <div class="flex flex-row-reverse gap-4">
       <UButton type="submit" :loading="isSaving">Save Changes</UButton>

@@ -12,6 +12,7 @@ export function createLocalAccountService(): AccountService {
     extraSpace: '@cutlist/extra-space',
     optimize: '@cutlist/optimize',
     showPartNumbers: '@cutlist/use-part-numbers',
+    showPartNames: '@cutlist/show-part-names',
     stock: '@cutlist/stock',
   };
   const projectsStorageKey = '@cutlist/projects';
@@ -56,11 +57,19 @@ export function createLocalAccountService(): AccountService {
     );
     if (showPartNumbers != null) settings.showPartNumbers = showPartNumbers;
 
+    const showPartNames = parseBoolean(
+      localStorage.getItem(getKey('showPartNames', projectId)),
+    );
+    if (showPartNames != null) settings.showPartNames = showPartNames;
+
     const distanceUnit = localStorage.getItem(
       getKey('distanceUnit', projectId),
     );
     if (distanceUnit != null)
       settings.distanceUnit = distanceUnit as AccountSettings['distanceUnit'];
+
+    const stock = localStorage.getItem(getKey('stock', projectId));
+    if (stock != null) settings.stock = stock;
 
     return {
       ...DEFAULT_SETTINGS,

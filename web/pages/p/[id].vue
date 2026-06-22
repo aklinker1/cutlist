@@ -3,11 +3,13 @@ const isExpanded = useIsExpanded();
 </script>
 
 <template>
-  <div class="absolute inset-0 flex bg-white dark:bg-gray-900 print:block">
+  <div
+    class="absolute inset-0 flex bg-white dark:bg-gray-900 print:relative print:inset-auto print:block"
+  >
     <ClientOnly>
       <ProjectSidebar
         v-if="!isExpanded"
-        class="bg-gray-50 dark:bg-gray-800 shrink-0 min-w-[28rem] relative z-10"
+        class="bg-gray-50 dark:bg-gray-800 shrink-0 min-w-[28rem] relative z-10 print:hidden"
       />
     </ClientOnly>
 

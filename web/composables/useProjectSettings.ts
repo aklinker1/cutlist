@@ -18,6 +18,7 @@ export default function () {
   const extraSpace = defineSettingValue('extraSpace');
   const optimize = defineSettingValue('optimize');
   const showPartNumbers = defineSettingValue('showPartNumbers');
+  const showPartNames = defineSettingValue('showPartNames');
   const stock = defineSettingValue('stock');
 
   const { data: settings, isLoading } = useSettingsQuery(projectId);
@@ -38,6 +39,8 @@ export default function () {
       changes.optimize = optimize.value;
     if (settings.value?.showPartNumbers !== showPartNumbers.value)
       changes.showPartNumbers = showPartNumbers.value;
+    if (settings.value?.showPartNames !== showPartNames.value)
+      changes.showPartNames = showPartNames.value;
     if (settings.value?.stock !== stock.value) changes.stock = stock.value;
     return changes;
   });
@@ -48,6 +51,7 @@ export default function () {
     extraSpace.value = settings.value?.extraSpace;
     optimize.value = settings.value?.optimize;
     showPartNumbers.value = settings.value?.showPartNumbers;
+    showPartNames.value = settings.value?.showPartNames;
   };
   const resetStock = () => {
     stock.value = settings.value?.stock;
@@ -59,6 +63,7 @@ export default function () {
     extraSpace,
     optimize,
     showPartNumbers,
+    showPartNames,
     stock,
     resetSettings,
     resetStock,

@@ -1,7 +1,44 @@
+import { isNearlyEqual } from '../geometry';
 import type { Point, Rectangle } from '../geometry';
 import type { Visualizer } from '../visualizers';
 import type { PackOptions, PackResult, Packer } from './Packer';
 import { isValidPlacement } from './utils';
+
+function contactScore<T>(
+  bin: Rectangle<unknown>,
+  placements: Rectangle<T>[],
+  candidate: Rectangle<T>,
+  gap: number,
+  precision: number,
+): number {
+  let score = 0;
+  const overlapX = (a: Rectangle<unknown>, b: Rectangle<unknown>) =>
+    Math.min(a.right, b.right) - Math.max(a.left, b.left);
+  const overlapY = (a: Rectangle<unknown>, b: Rectangle<unknown>) =>
+    Math.min(a.top, b.top) - Math.max(a.bottom, b.bottom);
+
+  if (isNearlyEqual(candidate.left, bin.left, precision)) {
+    score += candidate.height;
+  } else {
+    for (const p of placements) {
+      if (isNearlyEqual(p.right + gap, candidate.left, precision)) {
+        score += Math.max(0, overlapY(candidate, p));
+      }
+    }
+  }
+
+  if (isNearlyEqual(candidate.bottom, bin.bottom, precision)) {
+    score += candidate.width;
+  } else {
+    for (const p of placements) {
+      if (isNearlyEqual(p.top + gap, candidate.bottom, precision)) {
+        score += Math.max(0, overlapX(candidate, p));
+      }
+    }
+  }
+
+  return score;
+}
 
 export function createGenericPacker<T>({
   visualizer,
@@ -60,7 +97,24 @@ export function createGenericPacker<T>({
           possiblePlacements,
         });
         if (validPlacements.length > 0) {
-          res.placements.push(validPlacements[0]);
+          const best = validPlacements.reduce((best, candidate) => {
+            const bScore = contactScore(
+              bin,
+              res.placements,
+              best,
+              options.gap,
+              options.precision,
+            );
+            const cScore = contactScore(
+              bin,
+              res.placements,
+              candidate,
+              options.gap,
+              options.precision,
+            );
+            return cScore > bScore ? candidate : best;
+          });
+          res.placements.push(best);
         } else {
           res.leftovers.push(rect.data);
         }

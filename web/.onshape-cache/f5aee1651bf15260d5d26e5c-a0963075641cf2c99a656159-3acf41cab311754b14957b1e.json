@@ -1,0 +1,178 @@
+[
+  {
+    "name": "Bottom",
+    "partNumber": 1,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.41910000000000003,
+      "length": 0.6096000000000001,
+      "thickness": 0.01905
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Left",
+    "partNumber": 2,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.6096,
+      "length": 0.7747,
+      "thickness": 0.019049999999999928
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Right",
+    "partNumber": 3,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.6096,
+      "length": 0.7747,
+      "thickness": 0.019049999999999928
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Stretcher top back",
+    "partNumber": 4,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.09524999999999997,
+      "length": 0.41910000000000025,
+      "thickness": 0.01905000000000001
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Stretcher top front",
+    "partNumber": 5,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.09524999999999992,
+      "length": 0.41910000000000025,
+      "thickness": 0.01905000000000001
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Stretcher back",
+    "partNumber": 6,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.09525000000000006,
+      "length": 0.41910000000000025,
+      "thickness": 0.01905000000000001
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Back",
+    "partNumber": 7,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.43179999999999996,
+      "length": 0.74295,
+      "thickness": 0.006350000000000022
+    },
+    "material": "Unknown"
+  },
+  {
+    "name": "Bottom",
+    "partNumber": 8,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.6096000000000001,
+      "length": 0.8763000000000001,
+      "thickness": 0.01905000000000001
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Left",
+    "partNumber": 9,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.6096,
+      "length": 0.7747,
+      "thickness": 0.019049999999999956
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Right",
+    "partNumber": 10,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.6096,
+      "length": 0.7747,
+      "thickness": 0.019049999999999956
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Stretcher top back",
+    "partNumber": 11,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.09524999999999997,
+      "length": 0.8763000000000001,
+      "thickness": 0.01905000000000001
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Stretcher top front",
+    "partNumber": 12,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.09524999999999997,
+      "length": 0.8763000000000001,
+      "thickness": 0.01905000000000001
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Stretcher back",
+    "partNumber": 13,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.09525000000000006,
+      "length": 0.8763000000000001,
+      "thickness": 0.019050000000000122
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Back",
+    "partNumber": 14,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.74295,
+      "length": 0.889,
+      "thickness": 0.006350000000000133
+    },
+    "material": "Unknown"
+  },
+  {
+    "name": "Divider",
+    "partNumber": 15,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.5842,
+      "length": 0.7683500000000001,
+      "thickness": 0.019050000000000098
+    },
+    "material": "Plywood"
+  },
+  {
+    "name": "Cleat",
+    "partNumber": 16,
+    "instanceNumber": 1,
+    "size": {
+      "width": 0.10160000000000002,
+      "length": 1.3716000000000002,
+      "thickness": 0.019050000000000025
+    },
+    "material": "Plywood"
+  }
+]

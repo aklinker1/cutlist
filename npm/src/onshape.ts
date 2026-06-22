@@ -63,12 +63,13 @@ export function defineOnshapeLoader(config?: OnshapeApiConfig): OnshapeLoader {
           itemSource.configuration,
         );
         const material = headerIdToValue[materialHeaderId] as any;
+        const [thickness, width, length] = [
+          bounds.highX - bounds.lowX,
+          bounds.highY - bounds.lowY,
+          bounds.highZ - bounds.lowZ,
+        ].sort((a, b) => a - b);
         return {
-          size: {
-            width: bounds.highY - bounds.lowY,
-            length: bounds.highX - bounds.lowX,
-            thickness: bounds.highZ - bounds.lowZ,
-          },
+          size: { width, length, thickness },
           quantity: Number(headerIdToValue[quantityHeaderId]),
           name: String(headerIdToValue[nameHeaderId]),
           material: material?.displayName ?? 'Unknown',

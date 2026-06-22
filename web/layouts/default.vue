@@ -17,8 +17,8 @@ const closeTab = useCloseTab();
 </script>
 
 <template>
-  <div class="fixed inset-0 flex flex-col">
-    <ul class="shrink-0 flex">
+  <div class="fixed inset-0 flex flex-col print:static print:block">
+    <ul class="shrink-0 flex print:hidden">
       <!-- Home Link -->
       <TabListItem to="/" hide-close class="sticky left-0">
         <UIcon name="i-heroicons-home-solid" class="h-4 w-6" />
@@ -42,8 +42,10 @@ const closeTab = useCloseTab();
         <ProfileTab />
       </ClientOnly>
     </ul>
-    <div class="flex-1 relative">
-      <div class="absolute inset-0 overflow-hidden">
+    <div class="flex-1 relative print:static">
+      <div
+        class="absolute inset-0 overflow-hidden print:static print:overflow-visible"
+      >
         <slot />
       </div>
     </div>
@@ -55,6 +57,12 @@ const closeTab = useCloseTab();
 </template>
 
 <style>
+@media print {
+  @page {
+    margin: 0.4in;
+  }
+}
+
 .page-break-after {
   page-break-after: always;
 }

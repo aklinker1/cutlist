@@ -21,6 +21,7 @@ export interface AccountSettings {
   extraSpace: number;
   optimize: 'Cuts' | 'Space';
   showPartNumbers: boolean;
+  showPartNames: boolean;
   stock: string;
 }
 
@@ -45,5 +46,6 @@ export const DEFAULT_SETTINGS: AccountSettings = {
   extraSpace: 0,
   optimize: 'Cuts',
   showPartNumbers: true,
+  showPartNames: false,
   stock: YAML.dump(DEFAULT_STOCK, { indent: 2, flowLevel: 2 }),
 };

@@ -38,13 +38,13 @@ describe('Tight Bin Packer', () => {
         }),
         expect.objectContaining({
           data: '3',
-          left: 5,
-          bottom: 4,
+          left: 0,
+          bottom: 5,
         }),
         expect.objectContaining({
           data: '4',
-          left: 0,
-          bottom: 5,
+          left: 5,
+          bottom: 4,
         }),
       ],
       leftovers: ['5'],

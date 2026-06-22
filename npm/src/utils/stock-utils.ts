@@ -1,4 +1,3 @@
-import { isNearlyEqual } from './floating-point-utils';
 import type { BoardLayoutStock, PartToCut, Stock } from '../types';
 
 export function isValidStock(
@@ -6,11 +5,14 @@ export function isValidStock(
   target: PartToCut | Stock,
   epsilon: number,
 ) {
+  const testThickness = 'thicknessM' in test ? test.thicknessM : test.thickness;
+  const targetThickness =
+    'size' in target ? target.size.thickness : target.thickness;
+  const testMaterial = test.material.trim().toLowerCase();
+  const targetMaterial = target.material.trim().toLowerCase();
+
   return (
-    isNearlyEqual(
-      'size' in target ? target.size.thickness : target.thickness,
-      'thicknessM' in test ? test.thicknessM : test.thickness,
-      epsilon,
-    ) && test.material === target.material
+    Math.abs(testThickness - targetThickness) < epsilon &&
+    testMaterial === targetMaterial
   );
 }
